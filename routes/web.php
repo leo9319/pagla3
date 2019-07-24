@@ -143,7 +143,8 @@ Route::resources([
     'payment_received' => 'PaymentReceivedController',
     'payment_methods' => 'PaymentMethodController',
     'commissions' => 'CommissionController',
-    'adjust-balance' => 'AdjustBalanceController'
+    'adjust-balance' => 'AdjustBalanceController',
+    'distributors' => 'DistributorController',
 
 ]);
 

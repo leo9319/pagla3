@@ -12,7 +12,8 @@
   <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <!-- Custom fonts for this template-->
 
-  <link href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+  {{-- <link href="{{ asset('vendor/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"> --}}
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <!-- Page level plugin CSS-->
   <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
   <!-- Custom styles for this template-->
@@ -143,6 +144,7 @@
         </li>
         
         @if(Auth::user()->user_type == 'management' ||Auth::user()->user_type == 'sub_management' || Auth::user()->user_type == 'superadmin')
+
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#userCollapse" data-parent="#exampleAccordion">
             <i class="fa fa-fw fas fa-address-book"></i>
@@ -159,6 +161,14 @@
             </li>
           </ul>
         </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a class="nav-link" href="{{ route('distributors.index') }}">
+            <i class="fa-fw fas fa-project-diagram"></i>
+            <span class="nav-link-text">Distributors</span>
+          </a>
+        </li>
+
         @endif
 
       </ul>
