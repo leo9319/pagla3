@@ -7,7 +7,7 @@ use DB;
 
 class Party extends Model
 {
-    protected $fillable = ['id', 'party_id', 'party_name', 'party_type_id', 'party_phone', 'email', 'address', 'zone', 'owner_number', 'contact_person', 'credit_limit', 'created_at', 'updated_at', 'audit_approval', 'management_approval'];
+    protected $fillable = ['id', 'party_id', 'party_name', 'party_type_id', 'party_phone', 'email', 'address', 'zone', 'owner_number', 'contact_person', 'credit_limit', 'distributor', 'bin', 'created_at', 'updated_at', 'audit_approval', 'management_approval'];
 
     public function clients()
     {
@@ -55,6 +55,14 @@ class Party extends Model
                 'sales_approval'      => 1,
                 'warehouse_approval'  => 1,
             ]);
+    }
+
+    public static function approvedParties()
+    {
+        return static::where([
+                'audit_approval' => 1,
+                'management_approval' => 1,
+                ])->get();
     }
 
     public function payments_received_without_cheque()

@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use Redirect;
+use Carbon\Carbon;
 
 class SaleController extends Controller
 {
@@ -214,6 +215,7 @@ class SaleController extends Controller
 
     public function show_invoice(Request $request, Sale $sale)
     {
+        $max_products = 13;
         $sale->amount_after_discount;
         $sale->date;
 
@@ -293,11 +295,19 @@ class SaleController extends Controller
         $overall_due = ($all_previous_sales_return_amount + $payment_received) - $sales_due + $adjustments;
         $dues_including_current_sale = $overall_due - $sale->amount_after_discount;
 
+        // $test =  $sale->sale_products->toArray();
+
+        // return count($test);
+
+        $pages = ceil(count($sale->sale_products) / $max_products);
+
         return view('invoices.sales.show')
             ->with('sale', $sale)
             ->with('due_till_date', $due_till_date)
             ->with('overall_due', $overall_due)
-            ->with('dues_including_current_sale', $dues_including_current_sale);
+            ->with('dues_including_current_sale', $dues_including_current_sale)
+            ->with('pages', $pages)
+            ->with('max_products', $max_products);
     }
 
     /**

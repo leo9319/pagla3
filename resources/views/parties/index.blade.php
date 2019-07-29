@@ -19,6 +19,7 @@
               <th>Client ID</th>
               <th>Client Name</th>
               <th>Address</th>
+              <th>BIN</th>
               <th>Phone Number</th>
               <th>Email ID</th>
               <th>Contact Person</th>
@@ -61,6 +62,7 @@
               <th>Client ID</th>
               <th>Client Name</th>
               <th>Address</th>
+              <th>BIN</th>
               <th>Phone Number</th>
               <th>Email ID</th>
               <th>Contact Person</th>
@@ -104,6 +106,7 @@
                 <td>{{ $party->party_id }}</td>
                 <td>{{ $party->party_name }}</td>
                 <td>{{ $party->address }}</td>
+                <td>{{ $party->bin }}</td>
                 <td>{{ $party->party_phone }}</td>
                 <td>{{ $party->email }}</td>
                 <td>{{ $party->contact_person }}</td>
@@ -273,6 +276,11 @@
                           <div class="form-group">
                             {!! Form::label('zone', 'Zone:') !!}
                             {!! Form::select('zone', $zones, null, ['class'=>'form-control']) !!}
+                          </div>
+
+                          <div class="form-group">
+                            {!! Form::label('bin', 'BIN:') !!}
+                            {!! Form::text('bin', null, ['class'=>'form-control', 'required']) !!}
                           </div>
 
                         </div>

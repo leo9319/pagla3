@@ -20,4 +20,9 @@ class Sale extends Model
     	return $this->hasMany('App\Party', 'id', 'client_id');
     }
 
+    public function client()
+    {
+    	return $this->hasOne('App\Party', 'id', 'client_id');
+    }
+
 }

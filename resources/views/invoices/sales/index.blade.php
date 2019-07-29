@@ -413,7 +413,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div><div class="form-group">{!! Form::label("total_before_commission", "Total Before Commisison") !!}{!! Form::text("total_before_commission[]", null, ["class"=>"form-control", "id"=>"totalBeforeCommission-#", "readonly"]) !!}</div><div class="form-group">{!! Form::label("bill_after_commission", "Bill After Commisison") !!}{!! Form::text("bill_after_commission[]", null, ["class"=>"form-control readonly", "id"=>"billAfterCommission-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div><div class="form-group">{!! Form::label("commission_percentage", "Commisison %:") !!}{!! Form::text("commission_percentage[]", null, ["class"=>"form-control", "id"=>"commission-#", "readonly"]) !!}</div><div class="form-group">{!! Form::label("total_commission", "Total Commisison") !!}{!! Form::text("total_commission[]", null, ["class"=>"form-control", "id"=>"totalCommission-#", "readonly"]) !!}</div></div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total and Commission</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
+          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
 
             html = html.replace(/#/g, x);
 
@@ -619,35 +619,13 @@
   }
 
   function calculateCommission(x) {
-    var price_per_unit = document.getElementById('productPrice-' + x).value;
-    var quantity = document.getElementById('quantity-' + x).value;
+
+    var price_per_unit        = document.getElementById('productPrice-' + x).value;
+    var quantity              = document.getElementById('quantity-' + x).value;
     var totalBeforeCommission = document.getElementById('totalBeforeCommission-' + x).value = price_per_unit * quantity;
+
     document.getElementById('total-amount').value = '';
-
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findCommission')!!}',
-      data: {'party_types_id':party_type_id,'product_types_id':product_type_id[x]},
-      success:function(data){
-        if(data.length > 0) {
-          var commissionAmount = (totalBeforeCommission * data[0].commission_percentage)/100;
-          document.getElementById('commission-' + x).value = data[0].commission_percentage;
-          
-        }
-        else {
-          var commissionAmount = 0;
-          document.getElementById('commission-' + x).value = 0;
-        }
-
-        document.getElementById('billAfterCommission-' + x).value = totalBeforeCommission - commissionAmount;
-          document.getElementById('totalCommission-' + x).value = commissionAmount;
-          total_amount[x] = totalBeforeCommission - commissionAmount;
-         
-      },
-      error:function(){
-
-      }
-    });  
+    
   }
 
   function totalAmount() {

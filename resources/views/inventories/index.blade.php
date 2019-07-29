@@ -21,14 +21,14 @@
               <th>Brand</th>
               <th>Product Type</th>
               <th>Quantity</th>
-              <th>Expiry date</th>
               @if($user->user_type == 'sales' || $user->user_type == 'warehouse'  || $user->user_type == 'hr')
               <!-- Do Not show anything -->
               @else
                 <th>Cost</th>
               @endif
               
-              <th>Wholesale rate</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>Offer Rate</th>
               <th>Offer Start</th>
               <th>Offer End</th>
@@ -66,13 +66,13 @@
               <th>Brand</th>
               <th>Product Type</th>
               <th>Quantity</th>
-              <th>Expiry date</th>
               @if($user->user_type == 'sales' || $user->user_type == 'warehouse'  || $user->user_type == 'hr')
               <!-- Do Not show anything -->
               @else
                 <th>Cost</th>
               @endif
-              <th>Wholesale rate</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>Offer Rate</th>
               <th>Offer Start</th>
               <th>Offer End</th>
@@ -119,13 +119,13 @@
                 <td>{{ $inventory->brand }}</td>
                 <td>{{ $inventory->product_type }}</td>
                 <td>{{ $inventory->quantity }}</td>
-                <td>{{ $inventory->expiry_date }}</td>
                 @if($user->user_type == 'sales' || $user->user_type == 'warehouse'  || $user->user_type == 'hr')
                 <!-- Do Not show anything -->
                 @else
                   <td>{{ $inventory->cost }}</td>
                 @endif
                 
+                <td>{{ $inventory->dlp }}</td>
                 <td>{{ $inventory->wholesale_rate }}</td>
                 <td>{{ $inventory->offer_rate }}</td>
                 <td>{{ $inventory->offer_start }}</td>
@@ -238,7 +238,7 @@
 
 
                           <div class="form-group">
-                            {!! Form::label('wholesale_rate', 'Wholesale Rate:') !!}
+                            {!! Form::label('wholesale_rate', 'TP:') !!}
                             {!! Form::text('wholesale_rate', null, ['class'=>'form-control', 'required']) !!}
                           </div>  
 
@@ -269,13 +269,13 @@
                           @endif
 
                           <div class="form-group">
-                            {!! Form::label('batch_code', 'Batch Code:') !!}
-                            {!! Form::text('batch_code', null, ['class'=>'form-control', 'required']) !!}
+                            {!! Form::label('dlp', 'DLP:') !!}
+                            {!! Form::text('dlp', null, ['class'=>'form-control', 'required']) !!}
                           </div>
 
                           <div class="form-group">
-                            {!! Form::label('expiry_date', 'Expiry Date:') !!}
-                            {!! Form::date('expiry_date', null, ['class'=>'form-control', 'required']) !!}
+                            {!! Form::label('batch_code', 'Batch Code:') !!}
+                            {!! Form::text('batch_code', null, ['class'=>'form-control', 'required']) !!}
                           </div>
 
                         </div>

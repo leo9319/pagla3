@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Party;
 
 class DistributorController extends Controller
 {
@@ -13,7 +14,9 @@ class DistributorController extends Controller
      */
     public function index()
     {
-        return View('distributors.index');
+        $data['parties'] = Party::approvedParties();
+
+        return View('distributors.index', $data);
     }
 
     /**
@@ -34,7 +37,9 @@ class DistributorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Party::find($request->party_id)->update(['distributor' => 1]);
+
+        return back();
     }
 
     /**
