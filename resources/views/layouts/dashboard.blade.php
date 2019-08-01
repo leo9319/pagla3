@@ -28,7 +28,7 @@
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
   <!-- Navigation-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-    <img src="https://paglaoffer.com/img/pagla-offer-logo-1475305655.jpg" alt="logo" height="30px" width="35px" style="margin-right: 10px; border-radius: 15%;">
+    <img src="{{ asset('images/logo-home.jfif') }}" alt="logo" height="30px" width="35px" style="margin-right: 10px; border-radius: 15%;">
     <a class="navbar-brand" href="{{ url('home') }}">Purple Algorithm</a>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

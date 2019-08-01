@@ -201,7 +201,7 @@ class ProductController extends Controller
         $data= DB::table('products')
         ->join('product_types', 'products.product_type', '=', 'product_types.id')
         ->join('inventories', 'products.id', '=', 'inventories.product_id')
-        ->select('products.id','products.product_code', 'products.product_name', 'products.product_type', 'products.brand', 'product_types.type', 'inventories.wholesale_rate', 'inventories.mrp', DB::raw("(SELECT SUM(quantity) FROM inventories WHERE product_id = $request->id) as sum_of_quantity"))
+        ->select('products.id','products.product_code', 'products.product_name', 'products.product_type', 'products.brand', 'product_types.type', 'inventories.wholesale_rate', 'inventories.mrp', 'inventories.dlp', DB::raw("(SELECT SUM(quantity) FROM inventories WHERE product_id = $request->id) as sum_of_quantity"))
         ->where('products.id', '=', $request->id)
         ->where('inventories.audit_approval', '=', 1)
         ->where('inventories.management_approval', '=', 1)
