@@ -413,7 +413,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("discount", "Discount:") !!}{!! Form::text("discount[]", null, ["class"=>"form-control", "id"=>"discount-#"]) !!}</div><div class="col-md-12">{!! Form::label("amount_after_product_discount", "Amount After Discount:") !!}{!! Form::text("amount_after_product_discount[]", null, ["class"=>"form-control", "id"=>"amount-after-product-discount-#"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
+          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("discount", "Discount:") !!}{!! Form::number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!}</div><div class="col-md-12">{!! Form::label("amount_after_product_discount", "Amount After Discount:") !!}{!! Form::text("amount_after_product_discount[]", null, ["class"=>"form-control", "id"=>"amount-after-product-discount-#", "readonly"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
 
             html = html.replace(/#/g, x);
 
@@ -635,7 +635,7 @@
   function totalAmount() {
     var notFilled = false;
     var sum = 0;
-    var arr = document.getElementsByName('bill_after_commission[]');
+    var arr = document.getElementsByName('amount_after_product_discount[]');
 
     for(var i=0; i<arr.length;i++){
         if(isNaN(arr[i].value) || arr[i].value == "") {
@@ -648,12 +648,12 @@
       alert('Please fill out the Highlighted');
     }
     else {
-      for (var i = 0; i < total_amount.length; i++) {
+      for (var i = 0; i < arr.length; i++) {
         if(removeIndex.includes(i)) {
            continue; 
          }
-          sum += total_amount[i];
-          document.getElementById('total-amount').value = sum.toFixed(2);    
+          sum += parseFloat(arr[i].value);
+          document.getElementById('total-amount').value = sum;    
       }
     }
   }
@@ -680,6 +680,10 @@
     else {
       alert('Clear both fields and enter either Percentage OR Amount!');
     } 
+  }
+
+  function discount(elem, number) {
+    document.getElementById('amount-after-product-discount-' + number).value = '';
   }
 
   </script> 

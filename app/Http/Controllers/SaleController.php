@@ -162,7 +162,8 @@ class SaleController extends Controller
                 'product_id' => $request->product_code[$i],
                 'price_per_unit' => $request->price_per_unit[$i],
                 'quantity' => $request->quantity[$i],
-                'commission_percentage' => $request->commission_percentage[$i],
+                'commission_percentage' => 0,
+                'discount' => $request->discount[$i],
                 'remark' => $request->remark[$i]
             ]);
         }
