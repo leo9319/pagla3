@@ -467,7 +467,7 @@
   function check(elem, x) {
     var prod_id = elem.value;
     var op="";
-    var op2="";
+    // var op2="";
 
     $.ajax({
     type: 'get',
@@ -475,27 +475,25 @@
     data: {'id':prod_id},
       success:function(data){
 
-        op+='<option value="'+data[0].id+'">'+data[0].product_name+'</option>';
-        op2+='<option value="'+data[0].id+'">'+data[0].brand+'</option>';
+        op+='<option value="'+data.product_id+'">'+data.product_name+'</option>';
+        // op2+='<option value="'+data[0].id+'">'+data[0].brand+'</option>';
         document.getElementById('productName-' + x).innerHTML = op;
-        document.getElementById('productType-' + x).value = data[0].type;
-        document.getElementById('productBrand-' + x).value = data[0].brand;
+        document.getElementById('productType-' + x).value = data.product_type;
+        document.getElementById('productBrand-' + x).value = data.brand;
 
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
-
-          // alert(parseInt(data[0].dlp));
-          document.getElementById('productPrice-' + x).value = data[0].dlp;
+          document.getElementById('productPrice-' + x).value = data.dlp;
         }
         else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
-          document.getElementById('productPrice-' + x).value = data[0].wholesale_rate;
+          document.getElementById('productPrice-' + x).value = data.wholesale_rate;
         }
         else {
-          document.getElementById('productPrice-' + x).value = data[0].mrp;
+          document.getElementById('productPrice-' + x).value = data.mrp;
         }
 
-        document.getElementById('quantity-' + x).placeholder = data[0].sum_of_quantity + " units available";
+        document.getElementById('quantity-' + x).placeholder = data.quantity + " units available";
 
-        product_type_id[x] = data[0].product_type;
+        product_type_id[x] = data.product_type;
       },
       error:function(){
 
@@ -504,35 +502,39 @@
   }
 
   function check2(elem, x) {
-    var prod_name = elem.value;
+    var prod_id = elem.value;
     var op3="";
     var op4="";
 
     $.ajax({
       type: 'get',
-      url: '{!!URL::to('findName')!!}',
-      data: {'id':prod_name},
+      url: '{!!URL::to('findProductName')!!}',
+      data: {'id':prod_id},
       success:function(data){
+
         
-        op3+='<option value="'+data[0].id+'">'+data[0].product_code+'</option>';
-        op4+='<option value="'+data[0].id+'">'+data[0].brand+'</option>';
+        op3+='<option value="'+data.product_id+'">'+data.product_code+'</option>';
         document.getElementById('productid-' + x).innerHTML = op3; 
-        document.getElementById('productType-' + x).value = data[0].type;
-        document.getElementById('productBrand-' + x).value = data[0].brand;
+        document.getElementById('productType-' + x).value = data.product_type;
+        document.getElementById('productBrand-' + x).value = data.brand;
+        document.getElementById('productPrice-' + x).value = '';
 
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
-          document.getElementById('productPrice-' + x).value = data[0].dlp;
+          document.getElementById('productPrice-' + x).value = data.dlp;
+          // document.getElementById('productPrice-' + x).value = 10;
         }
         else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka') {
-          document.getElementById('productPrice-' + x).value = data[0].wholesale_rate;
+          document.getElementById('productPrice-' + x).value = data.wholesale_rate;
+          // document.getElementById('productPrice-' + x).value = 20;
         }
         else {
-          document.getElementById('productPrice-' + x).value = data[0].mrp;
+          document.getElementById('productPrice-' + x).value = data.mrp;
+          // document.getElementById('productPrice-' + x).value = 30;
         }
 
-        document.getElementById('quantity-' + x).placeholder = data[0].sum_of_quantity + " units available";
+        document.getElementById('quantity-' + x).placeholder = data.quantity + " units available";
         
-        product_type_id[x] = data[0].product_type;        
+        product_type_id[x] = data.product_type;        
       },
       error:function(){
 

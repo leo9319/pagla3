@@ -3,7 +3,8 @@
 	border-width: 4px; 
 	border-style: solid;
 	margin: 10px 40px;
-	height: 1500px;
+	height: 1491px;
+	padding-left: 10px;
 
 }
 
@@ -17,7 +18,12 @@
 }
 
 th{
-	font-size: 10px;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+td {
+	font-size: 11px;
 }
 
 .line-space {

@@ -13,6 +13,11 @@ class Inventory extends Model
     	return $this->hasMany('App\Product', 'id', 'product_id');
     }
 
+    public function product()
+    {
+    	return $this->hasOne('App\Product', 'id', 'product_id');
+    }
+
     public function product_names()
     {
     	return $this->hasMany('App\Product', 'id', 'product_name');

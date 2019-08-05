@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Inventory;
 use App\Product_type;
 use Illuminate\Http\Request;
 use DB;
@@ -191,24 +192,27 @@ class ProductController extends Controller
 
     public function findProductName(Request $request)
     {
-        // $data= DB::table('products')
-        // ->join('product_types', 'products.product_type', '=', 'product_types.id')
-        // ->join('inventories', 'products.id', '=', 'inventories.product_id')
-        // ->select('products.id','products.product_code', 'products.product_name', 'products.product_type', 'products.brand', 'product_types.type', 'inventories.wholesale_rate', 'inventories.mrp', 'inventories.quantity')
-        // ->where('products.id', '=', $request->id)
-        // ->get();
 
-        $data= DB::table('products')
-        ->join('product_types', 'products.product_type', '=', 'product_types.id')
-        ->join('inventories', 'products.id', '=', 'inventories.product_id')
-        ->select('products.id','products.product_code', 'products.product_name', 'products.product_type', 'products.brand', 'product_types.type', 'inventories.wholesale_rate', 'inventories.mrp', 'inventories.dlp', DB::raw("(SELECT SUM(quantity) FROM inventories WHERE product_id = $request->id) as sum_of_quantity"))
-        ->where('products.id', '=', $request->id)
-        ->where('inventories.audit_approval', '=', 1)
-        ->where('inventories.management_approval', '=', 1)
-        ->orderBy('inventories.created_at', 'desc')
-        ->get();
+        $inventory = Inventory::where([
+            'product_id'          => $request->id,
+            'audit_approval'      => 1,
+            'management_approval' => 1,
+        ])
+        ->where('quantity', '>', 0)
+        ->latest()
+        ->first();
 
-        return response()->json($data);
+        $data['quantity']       = $inventory->quantity;
+        $data['product_id']     = $inventory->product->id;
+        $data['product_code']   = $inventory->product->product_code;
+        $data['product_name']   = $inventory->product->product_name;
+        $data['brand']          = $inventory->product->brand;
+        $data['product_type']   = $inventory->product->productType->type;
+        $data['dlp']            = $inventory->dlp;
+        $data['wholesale_rate'] = $inventory->wholesale_rate;
+        $data['mrp']            = $inventory->mrp;
+
+        return $data;
     }
 
     public function findName(Request $request)

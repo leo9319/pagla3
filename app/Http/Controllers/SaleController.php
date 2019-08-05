@@ -157,10 +157,11 @@ class SaleController extends Controller
         $counter = count($request->product_code);
 
         for ($i=0; $i < $counter; $i++) { 
+
             DB::table('sales_products')->insert([
                 'invoice_no' => $invoice_id,
                 'product_id' => $request->product_code[$i],
-                'price_per_unit' => $request->price_per_unit[$i],
+                'price_per_unit' => $request->amount_after_product_discount[$i] / $request->quantity[$i],
                 'quantity' => $request->quantity[$i],
                 'commission_percentage' => 0,
                 'discount' => $request->discount[$i],
@@ -216,7 +217,7 @@ class SaleController extends Controller
 
     public function show_invoice(Request $request, Sale $sale)
     {
-        $max_products = 13;
+        $max_products = 30;
         $sale->amount_after_discount;
         $sale->date;
 
