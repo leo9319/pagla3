@@ -24,12 +24,16 @@ class InventoryController extends Controller
 
     public function index()
     {
-        $user = Auth::user();
-        $inventories = Inventory::orderBy('id', 'desc')->get();
-        $products = Product::where([
-            'audit_approval' => 1,
-            'management_approval' => 1,
-        ]);
+        $user        = Auth::user();
+        $inventories = Inventory::orderBy('id', 'desc')
+                        ->where('audit_approval', '!=', 0)
+                        ->where('management_approval', '!=', 0)
+                        ->get();
+
+        $products    = Product::where([
+                            'audit_approval' => 1,
+                            'management_approval' => 1,
+                       ]);
 
         if($user->user_type == 'sub_management') {
             return view('inventories.sub_management.index')

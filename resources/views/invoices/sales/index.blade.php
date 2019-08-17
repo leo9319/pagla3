@@ -122,7 +122,11 @@
                     @endforeach
                 </td>
                 <td>{{ number_format($sale->total_sales, 2) }}</td>
+                @if(isset($sale->discount_percentage) && $sale->discount_percentage != NULL)
                 <td>{{ $sale->discount_percentage }}%</td>
+                @else
+                <td></td>
+                @endif
                 <td>{{ number_format($sale->amount_after_discount) }}</td>
                 <td>{{ $sale->present_sr_id }}</td>
                 <td>{{ $sale->remarks }}</td>
@@ -413,7 +417,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("discount", "Discount:") !!}{!! Form::number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!}</div><div class="col-md-12">{!! Form::label("amount_after_product_discount", "Amount After Discount:") !!}{!! Form::text("amount_after_product_discount[]", null, ["class"=>"form-control", "id"=>"amount-after-product-discount-#", "readonly"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
+          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form:: hidden("inventory_id[]", null, ["id"=>"inventory-id-#"]) !!}{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("discount", "Discount:") !!}{!! Form::number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!}</div><div class="col-md-12">{!! Form::label("amount_after_product_discount", "Amount After Discount:") !!}{!! Form::text("amount_after_product_discount[]", null, ["class"=>"form-control", "id"=>"amount-after-product-discount-#", "readonly"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
 
             html = html.replace(/#/g, x);
 
@@ -517,19 +521,15 @@
         document.getElementById('productid-' + x).innerHTML = op3; 
         document.getElementById('productType-' + x).value = data.product_type;
         document.getElementById('productBrand-' + x).value = data.brand;
-        document.getElementById('productPrice-' + x).value = '';
 
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
           document.getElementById('productPrice-' + x).value = data.dlp;
-          // document.getElementById('productPrice-' + x).value = 10;
         }
         else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka') {
           document.getElementById('productPrice-' + x).value = data.wholesale_rate;
-          // document.getElementById('productPrice-' + x).value = 20;
         }
         else {
           document.getElementById('productPrice-' + x).value = data.mrp;
-          // document.getElementById('productPrice-' + x).value = 30;
         }
 
         document.getElementById('quantity-' + x).placeholder = data.quantity + " units available";
@@ -543,7 +543,7 @@
   }
 
   function checkClientCode(elem) {
-    var arr = document.getElementsByName('bill_after_commission[]');
+    var arr  = document.getElementsByName('bill_after_commission[]');
     var arr2 = document.getElementsByName('price_per_unit[]');
     var arr3 = document.getElementsByName('product_type[]');
     var arr4 = document.getElementsByName('brand[]');

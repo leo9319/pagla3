@@ -120,7 +120,7 @@ class SalesReturnController extends Controller
         $client_code = $client_data->party_id;
         $client_name = $client_data->party_name;
 
-        $last_invoice = DB::table('sales_returns')->orderBy('id', 'desc')->limit(1)->first();
+        $last_invoice = Sales_return::latest('id')->first();
 
         if($last_invoice != NULL) {
             $return_invoice_id = 'INR' . sprintf('%06d', ($last_invoice->id + 1));

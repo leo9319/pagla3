@@ -29,9 +29,6 @@
               
               <th>DLP</th>
               <th>TP</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
               <th>MRP</th>
               <th>Batch Code</th>
               @if($user->user_type == 'management' || $user->user_type == 'audit')
@@ -73,9 +70,6 @@
               @endif
               <th>DLP</th>
               <th>TP</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
               <th>MRP</th>
               <th>Batch Code</th>
               @if($user->user_type == 'management' || $user->user_type == 'audit')
@@ -127,9 +121,6 @@
                 
                 <td>{{ $inventory->dlp }}</td>
                 <td>{{ $inventory->wholesale_rate }}</td>
-                <td>{{ $inventory->offer_rate }}</td>
-                <td>{{ $inventory->offer_start }}</td>
-                <td>{{ $inventory->offer_end }}</td>
                 <td>{{ $inventory->mrp }}</td>          
                 <td>{{ $inventory->batch_code }}</td>
 
@@ -279,30 +270,7 @@
                           </div>
 
                         </div>
-
-                        <div class="col-md-12">
-                          <h2>Special Offer</h2>
-                          <hr>
-                        </div>
                         
-                        <div class="form-group col-md-6">
-                          
-                          <div class="form-group">
-                            {!! Form::label('offer_start', 'Offer Start:') !!}
-                            {!! Form::date('offer_start', null, ['class'=>'form-control']) !!}
-                          </div>
-                          <div class="form-group">
-                            {!! Form::label('offer_end', 'Offer End:') !!}
-                            {!! Form::date('offer_end', null, ['class'=>'form-control']) !!}
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            {!! Form::label('offer_rate', 'Offer Rate:') !!}
-                            {!! Form::number('offer_rate', null, ['class'=>'form-control']) !!}
-                          </div>
-
-                        </div>
                       </div>
                   </div>
 

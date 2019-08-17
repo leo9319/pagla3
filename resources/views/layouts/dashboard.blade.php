@@ -169,6 +169,23 @@
           </a>
         </li>
 
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#offerCollapse" data-parent="#exampleAccordion">
+            <i class="fas fa-hourglass-start"></i>
+            <span class="nav-link-text">Offers</span>
+          </a>
+          <ul class="sidenav-second-level collapse" id="offerCollapse">
+            @if(Auth::user()->user_type == 'superadmin' || Auth::user()->user_type == 'sub_management')
+              <li>
+                <a href="#">Offers</a>
+              </li>
+            @endif
+            <li>
+              <a href="{{ route('offer-types.index') }}">Offer Type</a>
+            </li>
+          </ul>
+        </li>
+
         @endif
 
       </ul>

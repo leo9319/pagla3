@@ -52,7 +52,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       {!! Form::label('product_code', 'Product Code:') !!}
-                      {!! Form::select('product_code[]', $products->pluck('product_code', 'id'), $product->id, ['class'=>'form-control select2', "id"=>"productid-$x", "onchange"=>"check(this, $x)", 'disabled' => true]) !!}
+                      {!! Form::text('product_code[]', $product->product_code, ['class'=>'form-control', 'readonly']) !!}
                     </div>
                     <div class="form-group">
                       {!! Form::label('product_type', 'Product Type:') !!}
@@ -76,7 +76,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       {!! Form::label('product_name', 'Product Name:') !!}
-                      {!! Form::select('product_name[]', $products->pluck('product_name', 'id'), $product->id, ['class'=>'form-control select2', "id"=>"productName-$x", "onchange"=>"check2(this, $x)", 'disabled' => true]) !!}
+                      {!! Form::text('product_name[]', $product->product_name, ['class'=>'form-control', 'readonly']) !!}
                     </div>
                     <div class="form-group">
                       {!! Form::label('brand', 'Brand:') !!}

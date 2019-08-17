@@ -192,25 +192,25 @@ class ProductController extends Controller
 
     public function findProductName(Request $request)
     {
+        $product   = Product::find($request->id);
 
         $inventory = Inventory::where([
             'product_id'          => $request->id,
             'audit_approval'      => 1,
             'management_approval' => 1,
-        ])
-        ->where('quantity', '>', 0)
-        ->latest()
-        ->first();
+        ]);
 
-        $data['quantity']       = $inventory->quantity;
-        $data['product_id']     = $inventory->product->id;
-        $data['product_code']   = $inventory->product->product_code;
-        $data['product_name']   = $inventory->product->product_name;
-        $data['brand']          = $inventory->product->brand;
-        $data['product_type']   = $inventory->product->productType->type;
-        $data['dlp']            = $inventory->dlp;
-        $data['wholesale_rate'] = $inventory->wholesale_rate;
-        $data['mrp']            = $inventory->mrp;
+        $latest_inventory = $inventory->latest()->first();
+
+        $data['product_id']     = $product->id;
+        $data['quantity']       = $inventory->sum('quantity');
+        $data['product_code']   = $product->product_code;
+        $data['product_name']   = $product->product_name;
+        $data['brand']          = $product->brand;
+        $data['product_type']   = $product->productType->type;
+        $data['dlp']            = $latest_inventory->dlp;
+        $data['wholesale_rate'] = $latest_inventory->wholesale_rate;
+        $data['mrp']            = $latest_inventory->mrp;
 
         return $data;
     }

@@ -167,13 +167,12 @@ class ReportController extends Controller
             }
             // Discount
             else if ($table_id == 7) {
-                $detailed_discount = DB::table('sales AS S')
-                 ->select('S.date', 'S.invoice_no', 'S.total_sales', 'S.amount_after_discount')
-                 ->where('S.date', '>=', $start_date)
-                 ->where('S.date', '<=', $end_date)
-                 ->where('S.audit_approval', 1)
-                 ->where('S.management_approval', 1)
-                 ->orderBy('S.date', 'asc')
+                $detailed_discount = Sale::select('date', 'client_id', 'invoice_no', 'total_sales', 'amount_after_discount')
+                 ->where('date', '>=', $start_date)
+                 ->where('date', '<=', $end_date)
+                 ->where('audit_approval', 1)
+                 ->where('management_approval', 1)
+                 ->orderBy('date', 'asc')
                  ->get();
 
                  return Excel::download(new DailyReportExportDetailDiscount($detailed_discount, $start_date, $end_date), 'Detailed Discount Report (Daily).xlsx');

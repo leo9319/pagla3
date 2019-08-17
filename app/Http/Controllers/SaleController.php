@@ -114,6 +114,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+        return $request->all();
         // check if the invoice number exixts
 
         $invoice_exists = Sale::where('invoice_no', $request->invoice_no)->get();

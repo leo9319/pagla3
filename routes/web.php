@@ -145,6 +145,8 @@ Route::resources([
     'commissions' => 'CommissionController',
     'adjust-balance' => 'AdjustBalanceController',
     'distributors' => 'DistributorController',
+    'offers' => 'OfferController',
+    'offer-types' => 'OfferTypeController',
 
 ]);
 
