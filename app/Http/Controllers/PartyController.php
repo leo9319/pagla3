@@ -198,7 +198,7 @@ class PartyController extends Controller
 
     public function findClientName(Request $request) 
     {
-        $data= DB::table('parties')
+        $data = DB::table('parties')
         ->join('party_types', 'parties.party_type_id', '=', 'party_types.id')
         ->join('h_r_s', 'parties.zone', '=', 'h_r_s.zone')
         ->select('parties.party_name', 'parties.party_type_id', 'parties.id', 'parties.zone', 'party_types.type', 'h_r_s.id AS hr_id', 'h_r_s.name AS hr_name')

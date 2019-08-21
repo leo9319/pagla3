@@ -387,37 +387,142 @@
     <!-- <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div> -->
   </div>
 
-@if($errors->any())
-  <?php echo "<script type='text/javascript'>alert('There is not enough quantity in the stock!');</script>"; ?>
-@endif
+  @if($errors->any())
+    <?php echo "<script type='text/javascript'>alert('There is not enough quantity in the stock!');</script>"; ?>
+  @endif
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
   <script type="text/javascript"> 
-    var maxRows = 100;
-    var x = 0;    
+
     var party_type_id;
     var party_type_name;
     var product_type_id;
     var commissionPerc;
+    var vat;
+
+    var maxRows         = 100;
+    var x               = 0;    
     var product_type_id = [];    
-    var total_amount = []; 
-    let removeIndex = [];
+    var total_amount    = []; 
+    let removeIndex     = [];
+
+
+
+    function checkClientCode(elem) {
+
+      var client_id = document.getElementById('clientCode').value;
+      var arr       = document.getElementsByName('bill_after_commission[]');
+      var arr2      = document.getElementsByName('price_per_unit[]');
+      var arr3      = document.getElementsByName('product_type[]');
+      var arr4      = document.getElementsByName('brand[]');
+      var op_cn     = "";
+
+      document.getElementById('current_sr_id').value = '';
+      
+      for(var i=0; i< arr.length; i++) {
+
+        $(arr[i]).val('');  
+        $(arr2[i]).val('');  
+        $(arr3[i]).val('');  
+        $(arr4[i]).val('');  
+
+      }
+
+      $.ajax({
+
+        type: 'get',
+        url: '{!!URL::to('findClientName')!!}',
+        data: {'id':client_id},
+        success: function(data) {
+
+          op_cn += '<option value="'+data[0].id+'">'+data[0].party_name+'</option>';
+
+          document.getElementById('clientName').innerHTML = op_cn;   
+          document.getElementById('clientSR').value       = data[0].hr_id;
+          document.getElementById('current_sr_id').value  = data[0].hr_name;
+
+          party_type_id                                   = data[0].party_type_id;  
+          party_type_name                                 = data[0].type;
+
+        },
+
+        error:function() {
+
+          alert('The client cant be found!');
+
+        }
+
+      });  
+
+      document.getElementById('total-amount').value = ''; 
+    }
+
+    function checkClientName(elem) {
+
+      var client_id = document.getElementById('clientName').value;
+      var arr       = document.getElementsByName('bill_after_commission[]');
+      var arr2      = document.getElementsByName('price_per_unit[]');
+      var arr3      = document.getElementsByName('product_type[]');
+      var arr4      = document.getElementsByName('brand[]');
+      var op_cc     = "";
+
+      document.getElementById('current_sr_id').value = '';
+      
+      for(var i=0; i<arr.length;i++){
+
+        $(arr[i]).val('');  
+        $(arr2[i]).val('');  
+        $(arr3[i]).val('');  
+        $(arr4[i]).val('');  
+
+      }
+
+      $.ajax({
+        type: 'get',
+        url: '{!!URL::to('findClientCode')!!}',
+        data: {'id':client_id},
+        success:function(data){
+          op_cc+='<option value="'+data[0].id+'">'+data[0].party_id+'</option>';
+
+          document.getElementById('clientCode').innerHTML = op_cc;  
+          document.getElementById('clientSR').value       = data[0].hr_id;
+          document.getElementById('current_sr_id').value  = data[0].hr_name;
+
+          party_type_id   = data[0].party_type_id; 
+          party_type_name = data[0].type;
+
+        },
+        error:function() {
+
+          alert('The client cant be found!');
+
+        }
+
+      });   
+
+      document.getElementById('total-amount').value = '';
+    }
 
     function addProduct() {
+
       var numberOfProducts = document.getElementById('number_of_products');
 
       if(numberOfProducts.value == '') {
+
         alert('Please enter the number of products!');
         numberOfProducts.style.borderColor = "red";
+
       }
+
       else {
+
         numberOfProducts.classList.add('readonly');
         document.getElementById('product-button').onclick = "#";
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div><div class="row"><div class="col-md-6"><div class="form-group">{!! Form:: hidden("inventory_id[]", null, ["id"=>"inventory-id-#"]) !!}{!! Form::label("product_code", "Product Code") !!}{!! Form::select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"check(this, #)"]) !!}</div><div class="form-group">{!! Form::label("product_type", "Product Types") !!}{!! Form::text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!}</div><div class="form-group">{!! Form::label("price_per_unit", "Price/Unit") !!}{!! Form::text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPrice-#", "required"]) !!}</div></div><div class="col-md-6"><div class="form-group">{!! Form::label("product_name", "Product Name:") !!}{!! Form::select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"check2(this, #)"]) !!}</div><div class="form-group">{!! Form::label("brand", "Brand") !!}{!! Form::text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!}</div><div class="form-group">{!! Form::label("quantity", "Quantity:") !!}{!! Form::text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!}</div></div><div class="col-md-12">{!! Form::label("total", "Total:") !!}{!! Form::text("total[]", null, ["class"=>"form-control", "id"=>"total-#"]) !!}</div><div class="col-md-12">{!! Form::label("discount", "Discount:") !!}{!! Form::number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!}</div><div class="col-md-12">{!! Form::label("amount_after_product_discount", "Amount After Discount:") !!}{!! Form::text("amount_after_product_discount[]", null, ["class"=>"form-control", "id"=>"amount-after-product-discount-#", "readonly"]) !!}</div><div class="col-md-12">{!! Form::label("remark", "Remark:") !!}{!! Form::text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!}</div></div><br><a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a><br><a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a><br><br></div>';
+          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity:") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
 
             html = html.replace(/#/g, x);
 
@@ -468,32 +573,60 @@
         e.preventDefault();
     });
 
-  function check(elem, x) {
+  function checkWithProductCode(elem, x) {
+
     var prod_id = elem.value;
-    var op="";
-    // var op2="";
+    var op      = "";
 
     $.ajax({
+
     type: 'get',
     url: '{!!URL::to('findProductName')!!}',
     data: {'id':prod_id},
-      success:function(data){
+    success: function(data) {
 
-        op+='<option value="'+data.product_id+'">'+data.product_name+'</option>';
-        // op2+='<option value="'+data[0].id+'">'+data[0].brand+'</option>';
-        document.getElementById('productName-' + x).innerHTML = op;
-        document.getElementById('productType-' + x).value = data.product_type;
-        document.getElementById('productBrand-' + x).value = data.brand;
+      var product_price   = document.getElementById('productPriceBeforeDiscount-' + x);
+      var total_after_vat = document.getElementById('vat-' + x);
 
-        if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
-          document.getElementById('productPrice-' + x).value = data.dlp;
-        }
-        else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
-          document.getElementById('productPrice-' + x).value = data.wholesale_rate;
-        }
-        else {
-          document.getElementById('productPrice-' + x).value = data.mrp;
-        }
+      op += '<option value="'+data.product_id+'">'+data.product_name+'</option>';
+
+      document.getElementById('productName-' + x).innerHTML = op;
+      document.getElementById('productType-' + x).value     = data.product_type;
+      document.getElementById('productBrand-' + x).value    = data.brand;
+
+      // assigning the Vat
+
+      if (party_type_name == 'PAL-Ecommerce') {
+
+        vat = 5;
+        total_after_vat.value = 5;
+
+      } else {
+
+        vat = 15;
+        total_after_vat.value = 15;
+
+      }
+
+      // assigning the price
+
+      if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
+
+        product_price.value = data.dlp;
+
+      }
+
+      else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
+
+        product_price.value = data.wholesale_rate;
+
+      }
+
+      else {
+
+        product_price.value = data.mrp;
+
+      }
 
         document.getElementById('quantity-' + x).placeholder = data.quantity + " units available";
 
@@ -505,7 +638,7 @@
     });
   }
 
-  function check2(elem, x) {
+  function checkWithProductName(elem, x) {
     var prod_id = elem.value;
     var op3="";
     var op4="";
@@ -518,9 +651,10 @@
 
         
         op3+='<option value="'+data.product_id+'">'+data.product_code+'</option>';
+
         document.getElementById('productid-' + x).innerHTML = op3; 
-        document.getElementById('productType-' + x).value = data.product_type;
-        document.getElementById('productBrand-' + x).value = data.brand;
+        document.getElementById('productType-' + x).value   = data.product_type;
+        document.getElementById('productBrand-' + x).value  = data.brand;
 
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
           document.getElementById('productPrice-' + x).value = data.dlp;
@@ -542,93 +676,22 @@
     });   
   }
 
-  function checkClientCode(elem) {
-    var arr  = document.getElementsByName('bill_after_commission[]');
-    var arr2 = document.getElementsByName('price_per_unit[]');
-    var arr3 = document.getElementsByName('product_type[]');
-    var arr4 = document.getElementsByName('brand[]');
-
-    document.getElementById('current_sr_id').value = '';
-    
-    for(var i=0; i<arr.length;i++){
-            $(arr[i]).val('');  
-            $(arr2[i]).val('');  
-            $(arr3[i]).val('');  
-            $(arr4[i]).val('');  
-    }
-
-    var client_id = document.getElementById('clientCode').value;
-    var op_cn="";
-
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findClientName')!!}',
-      data: {'id':client_id},
-      success:function(data){
-        op_cn+='<option value="'+data[0].id+'">'+data[0].party_name+'</option>';
-        document.getElementById('clientName').innerHTML = op_cn;   
-        document.getElementById('clientSR').value = data[0].hr_id;
-        document.getElementById('current_sr_id').value = data[0].hr_name;
-        party_type_id = data[0].party_type_id;  
-        party_type_name = data[0].type;
-      },
-      error:function(){
-
-      }
-    });  
-
-    document.getElementById('total-amount').value = ''; 
-  }
-
-  function checkClientName(elem) {
-    var arr = document.getElementsByName('bill_after_commission[]');
-    var arr2 = document.getElementsByName('price_per_unit[]');
-    var arr3 = document.getElementsByName('product_type[]');
-    var arr4 = document.getElementsByName('brand[]');
-
-    document.getElementById('current_sr_id').value = '';
-    
-    for(var i=0; i<arr.length;i++){
-            $(arr[i]).val('');  
-            $(arr2[i]).val('');  
-            $(arr3[i]).val('');  
-            $(arr4[i]).val('');  
-    }
-
-    var client_id = document.getElementById('clientName').value;
-    var op_cc="";
-
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findClientCode')!!}',
-      data: {'id':client_id},
-      success:function(data){
-        op_cc+='<option value="'+data[0].id+'">'+data[0].party_id+'</option>';
-        document.getElementById('clientCode').innerHTML = op_cc;  
-        document.getElementById('clientSR').value = data[0].hr_id;
-        document.getElementById('current_sr_id').value = data[0].hr_name;
-        party_type_id = data[0].party_type_id; 
-        party_type_name = data[0].type;
-      },
-      error:function(){
-
-      }
-    });   
-
-    document.getElementById('total-amount').value = '';
-  }
+  
 
   function calculateCommission(x) {
 
-    var price_per_unit          = document.getElementById('productPrice-' + x);
-    var quantity                = document.getElementById('quantity-' + x);
-    var total                   = document.getElementById('total-' + x);
+    var ppu_before_discount     = document.getElementById('productPriceBeforeDiscount-' + x);
     var discount                = document.getElementById('discount-' + x);
-    var amount_after_discount   = document.getElementById('amount-after-product-discount-' + x);
+    var total_before_vat        = document.getElementById('totalBeforeVat-' + x);
+    var quantity                = document.getElementById('quantity-' + x);
+    var ppu_after_discount      = document.getElementById('productPriceAfterDiscount-' + x);
+    var total_after_vat         = document.getElementById('totalAfterVat-' + x);
     
-    total.value                 = price_per_unit.value * quantity.value;
-    amount_after_discount.value = total.value - discount.value;
 
+    ppu_after_discount.value    = ppu_before_discount.value - discount.value;
+    
+    total_before_vat.value      = ppu_after_discount.value * quantity.value;
+    total_after_vat.value       = (parseFloat(total_before_vat.value)  * vat)/100 + parseFloat(total_before_vat.value);
 
     document.getElementById('total-amount').value = '';
     
