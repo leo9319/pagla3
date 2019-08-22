@@ -277,6 +277,10 @@
                       <div class="row">
                         <div class="form-group col-md-6">
 
+                          {{-- hidden fields --}}
+
+                          {!! Form::hidden('party_vat', null, ['id'=>'party-vat']) !!}
+
                           <div class="form-group">
                             {!! Form::label('date', 'Date') !!}
                             {!! Form::date('date', Carbon\Carbon::today()->format('Y-m-d'), ['class'=>'form-control', 'readonly']) !!}
@@ -325,53 +329,45 @@
                           </div>  
                         </div>
 
-                        <div class="container-fluid" style="padding-bottom: 20px;">
-                          <div style="padding-bottom: 20px;">
-                            <button type="button" class="btn btn-default" onclick="totalAmount()">Calculate Total Amount</button>
-                          </div>
-                          
-                          {!! Form::label('total_sales', 'Total Amount:', ['class' => 'font-weight-bold']) !!}
-                          {!! Form::text('total_sales', null, ['class'=>'form-control form-control-lg readonly', 'id'=>'total-amount', 'size'=>'30x3', 'required']) !!}
+                        <div class="container-fluid">
+                          <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
 
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            {!! Form::label('discount_percentage', 'Discount %:') !!}
-                            {!! Form::text('discount_percentage', null, ['class'=>'form-control', 'id' => 'discount-percentage', 'size'=>'30x3']) !!}
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            {!! Form::label('discount_amount', 'Discount Amount:') !!}
-                            {!! Form::text('discount_amount', null, ['class'=>'form-control', 'id'=>'discount-amount', 'size'=>'30x3']) !!}
-                          </div>
-                        </div>
+                                  {!! Form::label('total_sales_before_vat', 'Total Amount Before VAT', ['class' => 'font-weight-bold']) !!}
+                                  {!! Form::text('total_sales_before_vat', null, ['class'=>'form-control form-control-lg readonly', 'id'=>'total-amount-before-vat', 'required']) !!}
+                                  
+                                </div>
+                              </div>
                         
-                        <div class="container-fluid" style="padding-bottom: 20px;">
-                          <div style="padding-top:20px; padding-bottom: 20px;">
-                            <button type="button" class="btn btn-default" onclick="totalAmountAfterDiscount()">Calculate Amount After Discount</button>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  {!! Form::label('total_sales_after_vat', 'Total Amount After VAT', ['class' => 'font-weight-bold']) !!}
+                                  {!! Form::text('total_sales_after_vat', null, ['class'=>'form-control form-control-lg readonly', 'id'=>'total-amount-after-vat', 'required']) !!}
+                                </div>
+                              </div>
+                            </div>
+
+                            <button type="button" class="btn btn-default btn-block" onclick="totalAmount()">Calculate Total Amount</button>
+
                           </div>
 
-                          {!! Form::label('amount_after_discount', 'Total Amount After Discount:', ['class' => 'font-weight-bold']) !!}
-                          {!! Form::text('amount_after_discount', null, ['class'=>'form-control form-control-lg readonly', 'id'=>'after-discount', 'size'=>'30x3', 'required']) !!}
-                        </div>
 
-                      
-                        <div class="col-md-12">
-                          <div class="form-group">
-                            {!! Form::label('remarks', 'Remarks') !!}
-                            {!! Form::textarea('remarks', null, ['class'=>'form-control', 'size'=>'30x3']) !!}
-                          </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          {!! Form::label('remarks', 'Remarks') !!}
+                          {!! Form::textarea('remarks', null, ['class'=>'form-control', 'size'=>'30x3']) !!}
                         </div>
                       </div>
-                  </div>
+
+                    </div>
+                </div>
 
                   <div class="container-fluid">  
                     <button type="submit" class="btn btn-success btn-block" onClick="this.form.submit(); this.disabled=true; this.value='Sending…';">Save</button>
                     <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
                   </div>
+                </div>
                   
                 {!! Form::close() !!}
               </div>   
@@ -413,9 +409,11 @@
 
       var client_id = document.getElementById('clientCode').value;
       var arr       = document.getElementsByName('bill_after_commission[]');
-      var arr2      = document.getElementsByName('price_per_unit[]');
-      var arr3      = document.getElementsByName('product_type[]');
-      var arr4      = document.getElementsByName('brand[]');
+      var arr2      = document.getElementsByName('price_per_unit_before_discount[]');
+      var arr3      = document.getElementsByName('price_per_unit_after_discount[]');
+      var arr4      = document.getElementsByName('product_type[]');
+      var arr5      = document.getElementsByName('brand[]');
+      
       var op_cn     = "";
 
       document.getElementById('current_sr_id').value = '';
@@ -426,6 +424,7 @@
         $(arr2[i]).val('');  
         $(arr3[i]).val('');  
         $(arr4[i]).val('');  
+        $(arr5[i]).val('');  
 
       }
 
@@ -441,9 +440,11 @@
           document.getElementById('clientName').innerHTML = op_cn;   
           document.getElementById('clientSR').value       = data[0].hr_id;
           document.getElementById('current_sr_id').value  = data[0].hr_name;
+          document.getElementById('party-vat').value      = data[0].vat;
 
           party_type_id                                   = data[0].party_type_id;  
           party_type_name                                 = data[0].type;
+          vat                                             = data[0].vat;
 
         },
 
@@ -455,16 +456,18 @@
 
       });  
 
-      document.getElementById('total-amount').value = ''; 
+      document.getElementById('total-amount-before-vat').value = ''; 
+      document.getElementById('total-amount-after-vat').value = ''; 
     }
 
     function checkClientName(elem) {
 
       var client_id = document.getElementById('clientName').value;
       var arr       = document.getElementsByName('bill_after_commission[]');
-      var arr2      = document.getElementsByName('price_per_unit[]');
-      var arr3      = document.getElementsByName('product_type[]');
-      var arr4      = document.getElementsByName('brand[]');
+      var arr2      = document.getElementsByName('price_per_unit_before_discount[]');
+      var arr3      = document.getElementsByName('price_per_unit_after_discount[]');
+      var arr4      = document.getElementsByName('product_type[]');
+      var arr5      = document.getElementsByName('brand[]');
       var op_cc     = "";
 
       document.getElementById('current_sr_id').value = '';
@@ -475,6 +478,7 @@
         $(arr2[i]).val('');  
         $(arr3[i]).val('');  
         $(arr4[i]).val('');  
+        $(arr5[i]).val('');  
 
       }
 
@@ -488,9 +492,11 @@
           document.getElementById('clientCode').innerHTML = op_cc;  
           document.getElementById('clientSR').value       = data[0].hr_id;
           document.getElementById('current_sr_id').value  = data[0].hr_name;
+          document.getElementById('party-vat').value      = data[0].vat;
 
           party_type_id   = data[0].party_type_id; 
           party_type_name = data[0].type;
+          vat             = data[0].vat;
 
         },
         error:function() {
@@ -522,7 +528,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity:") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
+          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_before_discount", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit_before_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_after_discount", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit_after_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity:") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
 
             html = html.replace(/#/g, x);
 
@@ -596,17 +602,7 @@
 
       // assigning the Vat
 
-      if (party_type_name == 'PAL-Ecommerce') {
-
-        vat = 5;
-        total_after_vat.value = 5;
-
-      } else {
-
-        vat = 15;
-        total_after_vat.value = 15;
-
-      }
+      total_after_vat.value = vat;
 
       // assigning the price
 
@@ -649,21 +645,39 @@
       data: {'id':prod_id},
       success:function(data){
 
-        
+        var product_price   = document.getElementById('productPriceBeforeDiscount-' + x);
+        var total_after_vat = document.getElementById('vat-' + x);
+
         op3+='<option value="'+data.product_id+'">'+data.product_code+'</option>';
 
         document.getElementById('productid-' + x).innerHTML = op3; 
         document.getElementById('productType-' + x).value   = data.product_type;
         document.getElementById('productBrand-' + x).value  = data.brand;
 
+        // assigning the Vat
+
+        if (party_type_name == 'PAL-Ecommerce') {
+
+          vat = 5;
+          total_after_vat.value = 5;
+
+        } else {
+
+          vat = 15;
+          total_after_vat.value = 15;
+
+        }
+
+        // assigning the price
+
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
-          document.getElementById('productPrice-' + x).value = data.dlp;
+          product_price.value = data.dlp;
         }
         else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka') {
-          document.getElementById('productPrice-' + x).value = data.wholesale_rate;
+          product_price.value = data.wholesale_rate;
         }
         else {
-          document.getElementById('productPrice-' + x).value = data.mrp;
+          product_price.value = data.mrp;
         }
 
         document.getElementById('quantity-' + x).placeholder = data.quantity + " units available";
@@ -699,12 +713,20 @@
 
   function totalAmount() {
     var notFilled = false;
-    var sum = 0;
-    var arr = document.getElementsByName('amount_after_product_discount[]');
+    var sum_before_vat = 0;
+    var sum_after_vat = 0;
+    var total_before_vat = document.getElementsByName('total_before_vat[]');
+    var total_after_vat  = document.getElementsByName('total_after_vat[]');
 
-    for(var i=0; i<arr.length;i++){
-        if(isNaN(arr[i].value) || arr[i].value == "") {
-            $(arr[i]).val('').css( "border-color", "red" );
+    for(var i=0; i<total_before_vat.length;i++){
+
+        if(isNaN(total_before_vat[i].value) || total_before_vat[i].value == "") {
+            $(total_before_vat[i]).val('').css( "border-color", "red" );
+            notFilled = true;
+        }
+
+        if(isNaN(total_after_vat[i].value) || total_after_vat[i].value == "") {
+            $(total_after_vat[i]).val('').css( "border-color", "red" );
             notFilled = true;
         }
     }
@@ -713,39 +735,41 @@
       alert('Please fill out the Highlighted');
     }
     else {
-      for (var i = 0; i < arr.length; i++) {
+      for (var i = 0; i < total_before_vat.length; i++) {
         if(removeIndex.includes(i)) {
            continue; 
          }
-          sum += parseFloat(arr[i].value);
-          document.getElementById('total-amount').value = sum;    
+          sum_before_vat += parseFloat(total_before_vat[i].value);
+          sum_after_vat  += parseFloat(total_after_vat[i].value);
+          document.getElementById('total-amount-before-vat').value = sum_before_vat;    
+          document.getElementById('total-amount-after-vat').value = sum_after_vat;    
       }
     }
   }
 
-  function totalAmountAfterDiscount() {
-    var discount_amount = document.getElementById('discount-amount');
-    var discount_percentage = document.getElementById('discount-percentage');
-    var after_discount = document.getElementById('after-discount');
-    var total_amount = document.getElementById('total-amount');
-    var discount_amount_on_percentage;
+  // function totalAmountAfterDiscount() {
+  //   var discount_amount = document.getElementById('discount-amount');
+  //   var discount_percentage = document.getElementById('discount-percentage');
+  //   var after_discount = document.getElementById('after-discount');
+  //   var total_amount = document.getElementById('total-amount');
+  //   var discount_amount_on_percentage;
 
-    if (discount_percentage.value == "") {
-      // alert('Percentage is empty');
-      after_discount.value = total_amount.value - discount_amount.value;
-      discount_percentage.value = ((discount_amount.value/total_amount.value) * 100).toFixed(2);
-    }
-    else if (discount_amount.value == ""){
-      // alert('Amount is empty');
-      discount_amount_on_percentage = (discount_percentage.value * total_amount.value)/100;
-      discount_amount.value = discount_amount_on_percentage;
-      after_discount.value = total_amount.value - discount_amount_on_percentage;
-    }
+  //   if (discount_percentage.value == "") {
+  //     // alert('Percentage is empty');
+  //     after_discount.value = total_amount.value - discount_amount.value;
+  //     discount_percentage.value = ((discount_amount.value/total_amount.value) * 100).toFixed(2);
+  //   }
+  //   else if (discount_amount.value == ""){
+  //     // alert('Amount is empty');
+  //     discount_amount_on_percentage = (discount_percentage.value * total_amount.value)/100;
+  //     discount_amount.value = discount_amount_on_percentage;
+  //     after_discount.value = total_amount.value - discount_amount_on_percentage;
+  //   }
 
-    else {
-      alert('Clear both fields and enter either Percentage OR Amount!');
-    } 
-  }
+  //   else {
+  //     alert('Clear both fields and enter either Percentage OR Amount!');
+  //   } 
+  // }
 
   function discount(elem, number) {
     document.getElementById('amount-after-product-discount-' + number).value = '';

@@ -114,6 +114,7 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         // get the invoice id
 
         $invoice_no = $this->getInvoiceNumber($request->invoice_no);
@@ -124,28 +125,29 @@ class SaleController extends Controller
 
         $sale = new Sale;
 
-        $sale->date                  = $request->date;
-        $sale->invoice_no            = $invoice_no;
-        $sale->client_id             = $request->client_id; 
-        $sale->total_sales           = $request->total_sales;
-        $sale->discount_percentage   = $request->discount_percentage;
-        $sale->amount_after_discount = $request->amount_after_discount;
-        $sale->present_sr_id         = $sales_person_name;
-        $sale->remarks               = $request->remarks;
+        $sale->date          = $request->date;
+        $sale->invoice_no    = $invoice_no;
+        $sale->client_id     = $request->client_id; 
+        $sale->total_sales   = $request->total_sales_before_vat;
+        $sale->vat           = $request->party_vat;
+        $sale->present_sr_id = $sales_person_name;
+        $sale->remarks       = $request->remarks;
         $sale->save();
 
         $counter = count($request->product_code);
 
+        // storing all the products of the sales
+
         for ($i=0; $i < $counter; $i++) { 
 
             DB::table('sales_products')->insert([
-                'invoice_no' => $invoice_no,
-                'product_id' => $request->product_code[$i],
-                'price_per_unit' => $request->amount_after_product_discount[$i] / $request->quantity[$i],
-                'quantity' => $request->quantity[$i],
+                'invoice_no'            => $invoice_no,
+                'product_id'            => $request->product_code[$i],
+                'price_per_unit'        => $request->price_per_unit_after_discount[$i],
+                'quantity'              => $request->quantity[$i],
                 'commission_percentage' => 0,
-                'discount' => $request->discount[$i],
-                'remark' => $request->remark[$i]
+                'discount'              => $request->discount[$i],
+                'remark'                => $request->remark[$i]
             ]);
         }
 

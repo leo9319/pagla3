@@ -19,6 +19,11 @@ class Party extends Model
     	return $this->hasOne('App\Party_type', 'id', 'party_type_id');
     }
 
+    public function partyType()
+    {
+        return $this->hasOne('App\Party_type', 'id', 'party_type_id');
+    }
+
     public function zones()
     {
         return $this->hasMany('App\Zone', 'id', 'zone');

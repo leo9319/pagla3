@@ -44,12 +44,10 @@
 				      <td>{{ number_format($ppu = $sale->sale_products[$i]->price_per_unit) }}</td>
 				      <td>{{ number_format($total = ($quantity * $ppu)) }}</td>
 				      <td></td>
-				      <td>15%</td>
-				      <td>{{ number_format($vat = $quantity * $ppu * 0.15) }}</td>
+				      <td>{{ $sale->vat ?? 0 }}%</td>
+				      <td>{{ number_format($vat = $quantity * $ppu * $sale->vat/100) }}</td>
 				      <td>{{ number_format($vat + $total) }}</td>
 				    </tr>
-		
-		
 		
 				    <?php 
 				    	$i++;
@@ -100,11 +98,11 @@
 
 				    	<tr>
 				    		<td colspan="5" class="text-right">সর্বমোট:</td>
-				    		<td>{{ $sale->total_sales }}</td>
+				    		<td>{{ number_format($sale->getTotal('sales without vat'), 2) }}</td>
+				    		<td>0</td>
 				    		<td></td>
-				    		<td></td>
-				    		<td></td>
-				    		<td></td>
+				    		<td>{{ number_format($sale->getTotal('vat'), 2) }}</td>
+				    		<td>{{ number_format($sale->getTotal('sales with vat'), 2) }}</td>
 				    	</tr>
 		
 		
