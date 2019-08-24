@@ -7,7 +7,7 @@
       @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'hr')
       <!-- Do Not show anything -->
       @else
-        <a href="#"><button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">Create Sales</button></a>
+        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">Create Sales</button>
       @endif
       
     </div>
@@ -32,9 +32,8 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-              <th>Total Sale</th>
-              <th>Discount Percentage</th>
-              <th>Amount After Discount</th>
+{{--               <th>Total Sale (Before VAT)</th>
+              <th>Total Sale (After VAT)</th> --}}
               <th>Sales Person</th>
               <th>Remarks</th>
 
@@ -72,9 +71,8 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-              <th>Total Sale</th>
-              <th>Discount Percentage</th>
-              <th>Amount After Discount</th>
+{{--               <th>Total Sale (Before VAT)</th>
+              <th>Total Sale (After VAT)</th> --}}
               <th>Sales Person</th>
               <th>Remarks</th>
 
@@ -109,7 +107,7 @@
             @foreach($sales as $sale)
               <tr>
                 <td>{{ $sale->id }}</td>
-                <td>{{ $sale->date }}</td>
+                <td>{{ Carbon\Carbon::parse($sale->date)->format('d-m-y') }}</td>
                 <td><a href="{{ route('sales.preview', ['sale'=>$sale->id]) }}">{{ $sale->invoice_no }}</a></td>
                 <td>
                     @foreach($sale->clients as $client)
@@ -121,13 +119,8 @@
                       {{ $client->party_name }}
                     @endforeach
                 </td>
-                <td>{{ number_format($sale->total_sales, 2) }}</td>
-                @if(isset($sale->discount_percentage) && $sale->discount_percentage != NULL)
-                <td>{{ $sale->discount_percentage }}%</td>
-                @else
-                <td></td>
-                @endif
-                <td>{{ number_format($sale->amount_after_discount) }}</td>
+{{--                 <td>{{ number_format($sale->getTotal('sales without vat'), 2) }}</td>
+                <td>{{ number_format($sale->getTotal('sales with vat'), 2) }}</td> --}}
                 <td>{{ $sale->present_sr_id }}</td>
                 <td>{{ $sale->remarks }}</td>
 
@@ -271,7 +264,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
 
-        <div class="modal-body">
+              <div class="modal-body">
                 {!! Form::open(['route' => 'sales.store', 'autocomplete'=>'off']) !!}
                   <div class="container-fluid">
                       <div class="row">
@@ -364,7 +357,10 @@
                 </div>
 
                   <div class="container-fluid">  
-                    <button type="submit" class="btn btn-success btn-block" onClick="this.form.submit(); this.disabled=true; this.value='Sending…';">Save</button>
+{{--                     <button type="submit" class="btn btn-success btn-block" onClick="this.form.submit(); this.disabled=true; this.value='Sending…';" disabled="disabled">Save</button> --}}
+
+                    <button type="submit" id="submit-button" class="btn btn-success btn-block" onClick="this.form.submit(); this.value='Sending…';" disabled="disabled">Save</button>
+
                     <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>
                   </div>
                 </div>
@@ -528,7 +524,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_before_discount", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit_before_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_after_discount", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit_after_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity:") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateCommission(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
+          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_before_discount", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit_before_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_after_discount", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit_after_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity:") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateTotalAmount(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
 
             html = html.replace(/#/g, x);
 
@@ -553,7 +549,6 @@
         removeIndex.push(Number(this.name));
         document.getElementById('total-amount').value = '';
     });
-
 
     $("#clientCode").select2({
             placeholder: 'Select a Client ID', 
@@ -690,35 +685,16 @@
     });   
   }
 
-  
-
-  function calculateCommission(x) {
-
-    var ppu_before_discount     = document.getElementById('productPriceBeforeDiscount-' + x);
-    var discount                = document.getElementById('discount-' + x);
-    var total_before_vat        = document.getElementById('totalBeforeVat-' + x);
-    var quantity                = document.getElementById('quantity-' + x);
-    var ppu_after_discount      = document.getElementById('productPriceAfterDiscount-' + x);
-    var total_after_vat         = document.getElementById('totalAfterVat-' + x);
-    
-
-    ppu_after_discount.value    = ppu_before_discount.value - discount.value;
-    
-    total_before_vat.value      = ppu_after_discount.value * quantity.value;
-    total_after_vat.value       = (parseFloat(total_before_vat.value)  * vat)/100 + parseFloat(total_before_vat.value);
-
-    document.getElementById('total-amount').value = '';
-    
-  }
-
   function totalAmount() {
-    var notFilled = false;
-    var sum_before_vat = 0;
-    var sum_after_vat = 0;
+
+    var notFilled        = false;
+    var sum_before_vat   = 0;
+    var sum_after_vat    = 0;
+
     var total_before_vat = document.getElementsByName('total_before_vat[]');
     var total_after_vat  = document.getElementsByName('total_after_vat[]');
 
-    for(var i=0; i<total_before_vat.length;i++){
+    for(var i=0; i<total_before_vat.length; i++){
 
         if(isNaN(total_before_vat[i].value) || total_before_vat[i].value == "") {
             $(total_before_vat[i]).val('').css( "border-color", "red" );
@@ -743,8 +719,28 @@
           sum_after_vat  += parseFloat(total_after_vat[i].value);
           document.getElementById('total-amount-before-vat').value = sum_before_vat;    
           document.getElementById('total-amount-after-vat').value = sum_after_vat;    
+          document.getElementById('submit-button').disabled = false;    
       }
     }
+  }
+
+  function calculateTotalAmount(x) {
+
+    var ppu_before_discount     = document.getElementById('productPriceBeforeDiscount-' + x);
+    var discount                = document.getElementById('discount-' + x);
+    var total_before_vat        = document.getElementById('totalBeforeVat-' + x);
+    var quantity                = document.getElementById('quantity-' + x);
+    var ppu_after_discount      = document.getElementById('productPriceAfterDiscount-' + x);
+    var total_after_vat         = document.getElementById('totalAfterVat-' + x);
+    
+
+    ppu_after_discount.value    = ppu_before_discount.value - discount.value;
+    
+    total_before_vat.value      = ppu_after_discount.value * quantity.value;
+    total_after_vat.value       = (parseFloat(total_before_vat.value)  * vat)/100 + parseFloat(total_before_vat.value);
+
+    document.getElementById('total-amount').value = '';
+    
   }
 
   // function totalAmountAfterDiscount() {

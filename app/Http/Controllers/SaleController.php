@@ -199,6 +199,10 @@ class SaleController extends Controller
 
     public function show_invoice(Request $request, Sale $sale)
     {
+        // defined date
+        $defined_date = new Carbon('2019-08-22 00:00:00');
+        $sale_date = Carbon::parse($sale->date)->format('Y-m-d h:m:s');
+
         $max_products = 30;
         $sale->amount_after_discount;
         $sale->date;
@@ -285,13 +289,29 @@ class SaleController extends Controller
 
         $pages = ceil(count($sale->sale_products) / $max_products);
 
-        return view('invoices.sales.show')
+        if($sale_date >= $defined_date) {
+
+            return view('invoices.sales.show')
             ->with('sale', $sale)
             ->with('due_till_date', $due_till_date)
             ->with('overall_due', $overall_due)
             ->with('dues_including_current_sale', $dues_including_current_sale)
             ->with('pages', $pages)
             ->with('max_products', $max_products);
+
+        } else {
+
+            return view('invoices.sales.show_old')
+            ->with('sale', $sale)
+            ->with('due_till_date', $due_till_date)
+            ->with('overall_due', $overall_due)
+            ->with('dues_including_current_sale', $dues_including_current_sale)
+            ->with('pages', $pages)
+            ->with('max_products', $max_products);
+
+        }
+
+        
     }
 
     /**
