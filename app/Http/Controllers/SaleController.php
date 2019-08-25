@@ -19,6 +19,8 @@ use Auth;
 use Redirect;
 use Carbon\Carbon;
 
+define("DEFINED_DATE", new Carbon('2019-08-22 00:00:00'));
+
 class SaleController extends Controller
 {
     /**
@@ -29,6 +31,7 @@ class SaleController extends Controller
 
     public function __construct()
     {
+        $this->defined_date = DEFINED_DATE;
         $this->middleware('auth');
         $this->middleware('role:superadmin,management,sub_management,warehouse,audit,sales,hr')->only('index');
         $this->middleware('role:superadmin,sub_management')->only('edit', 'destroy');
@@ -199,8 +202,6 @@ class SaleController extends Controller
 
     public function show_invoice(Request $request, Sale $sale)
     {
-        // defined date
-        $defined_date = new Carbon('2019-08-22 00:00:00');
         $sale_date = Carbon::parse($sale->date)->format('Y-m-d h:m:s');
 
         $max_products = 30;
@@ -289,7 +290,7 @@ class SaleController extends Controller
 
         $pages = ceil(count($sale->sale_products) / $max_products);
 
-        if($sale_date >= $defined_date) {
+        if($sale_date >= $this->defined_date) {
 
             return view('invoices.sales.show')
             ->with('sale', $sale)
@@ -628,6 +629,8 @@ class SaleController extends Controller
 
     public function preview(Sale $sale)
     {
+        $sale_date    = Carbon::parse($sale->date)->format('Y-m-d h:m:s');
+
         $clients = Party::where([
             'audit_approval'=> 1,
             'management_approval'=> 1,
@@ -722,13 +725,28 @@ class SaleController extends Controller
         $overall_due = ($all_previous_sales_return_amount + $payment_received) - $sales_due;
         $dues_including_current_sale = $overall_due - $sale->amount_after_discount;
 
-        return view('invoices.sales.preview')
+        if($sale_date >= $this->defined_date) {
+
+            return view('invoices.sales.preview')
             ->with('sales', $sales)
             ->with('clients', $clients)
             ->with('sales_products', $sales_products)
             ->with('products', $products)
             ->with('overall_due', $overall_due)
             ->with('dues_including_current_sale', $dues_including_current_sale);
+
+        } else {
+
+            return view('invoices.sales.preview_old')
+            ->with('sales', $sales)
+            ->with('clients', $clients)
+            ->with('sales_products', $sales_products)
+            ->with('products', $products)
+            ->with('overall_due', $overall_due)
+            ->with('dues_including_current_sale', $dues_including_current_sale);
+
+        }
+
 
     }
 
