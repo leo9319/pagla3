@@ -18,436 +18,443 @@ class TestController extends Controller
      */
     public function index()
     {
-        $sales = [
-                0 => [
-                        'product_id' => 'Shampoo 400 ml',
-                        'idk'        => 1,
-                        'quantity'   => 5,
-                        'price'      => 239.74,
-                        'total'      => 1198.7,
-                        'vat'        => 15,
-                        'price_2'      => 179.804,
-                        'net_total'  => 1378.50
-                    ],
+        // $sales = [
+        //         0 => [
+        //                 'product_id' => 'Shampoo 400 ml',
+        //                 'idk'        => 1,
+        //                 'quantity'   => 5,
+        //                 'price'      => 239.74,
+        //                 'total'      => 1198.7,
+        //                 'vat'        => 15,
+        //                 'price_2'      => 179.804,
+        //                 'net_total'  => 1378.50
+        //             ],
 
-                1 => [
+        //         1 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                2 => [
+        //         2 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                3 => [
+        //         3 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                4 => [
+        //         4 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                5 => [
+        //         5 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                6 => [
+        //         6 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                7 => [
+        //         7 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                8 => [
+        //         8 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
 
-                9 => [
+        //         9 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],10 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],10 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],11 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],11 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],12 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],12 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],13 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],13 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],14 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],14 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],15 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],15 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],16 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],16 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],17 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],17 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],18 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],18 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],19 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],19 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],20 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],20 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],21 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],21 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],22 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],22 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],23 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],23 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],24 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],24 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],25 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],25 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],26 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],26 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],27 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],27 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],28 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],28 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],29 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],29 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],30 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],30 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],31 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],31 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],32 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],32 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],33 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],33 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],34 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],34 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],35 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],35 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],36 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],36 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],37 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],37 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],38 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],38 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],39 => [
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],39 => [
 
-                    'product_id' => 'Shampoo 400 ml',
-                    'idk'        => 1,
-                    'quantity'   => 5,
-                    'price'      => 239.74,
-                    'total'      => 1198.7,
-                    'vat'        => 15,
-                    'price_2'      => 179.804,
-                    'net_total'  => 1378.50
-                ],
-        ];
+        //             'product_id' => 'Shampoo 400 ml',
+        //             'idk'        => 1,
+        //             'quantity'   => 5,
+        //             'price'      => 239.74,
+        //             'total'      => 1198.7,
+        //             'vat'        => 15,
+        //             'price_2'      => 179.804,
+        //             'net_total'  => 1378.50
+        //         ],
+        // ];
 
-        $number_of_products = count($sales);
+        // $number_of_products = count($sales);
 
-        $pages = ceil($number_of_products / 26);
+        // $pages = ceil($number_of_products / 26);
 
 
-        return view('test2')->with([
-            'pages' => $pages,
-            'sales' => $sales,
-        ]);
+        // return view('test2')->with([
+        //     'pages' => $pages,
+        //     'sales' => $sales,
+        // ]);
+
+
+
+        return $detailed_sales = Sale::whereBetween('date', ['2019-08-01', '2019-08-24'])
+                                      ->where('audit_approval', 1)
+                                      ->where('management_approval', 1)
+                                      ->get();
     }
 
     /**

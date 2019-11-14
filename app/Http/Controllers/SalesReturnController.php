@@ -385,6 +385,26 @@ class SalesReturnController extends Controller
                 ->get();
 
             // now select each of the product and find out the quantity:
+
+            // Make sure the product is in the inventory:
+
+            $product_ids = $all_returned_products->pluck('product_id');
+
+            foreach ($product_ids as $product_id) {
+
+                $inventory_exists = Inventory::where('product_id', $product_id)
+                ->where('audit_approval', 1)
+                ->where('management_approval', 1)
+                ->first();
+
+                $product_code = Product::find($product_id)->product_code ?? 'N/A';
+
+                if(!$inventory_exists) {
+                    return redirect()->back()->with('message', "$product_code DOESNT EXIST IN THE INVENTORY");
+                }
+                
+            }
+
             foreach ($all_returned_products as $product) {
                 $quantity = 0;
 
@@ -436,6 +456,26 @@ class SalesReturnController extends Controller
                 ->get();
 
             // now select each of the product and find out the quantity:
+
+            // Make sure all the products returned are in the inventory:
+
+            $product_ids = $all_returned_products->pluck('product_id');
+
+            foreach ($product_ids as $product_id) {
+
+                $inventory_exists = Inventory::where('product_id', $product_id)
+                ->where('audit_approval', 1)
+                ->where('management_approval', 1)
+                ->first();
+
+                $product_code = Product::find($product_id)->product_code ?? 'N/A';
+
+                if(!$inventory_exists) {
+                    return redirect()->back()->with('message', "$product_code DOESNT EXIST IN THE INVENTORY");
+                }
+                
+            }
+
             foreach ($all_returned_products as $product) {
                 $quantity = 0;
 

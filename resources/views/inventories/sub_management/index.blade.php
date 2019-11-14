@@ -28,10 +28,8 @@
                 <th>Cost</th>
               @endif
               
-              <th>Wholesale rate</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>MRP</th>
               <th>Batch Code</th>
               @if($user->user_type == 'sub_management' || $user->user_type == 'audit')
@@ -72,10 +70,8 @@
               @else
                 <th>Cost</th>
               @endif
-              <th>Wholesale rate</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>MRP</th>
               <th>Batch Code</th>
               @if($user->user_type == 'sub_management' || $user->user_type == 'audit')
@@ -126,10 +122,8 @@
                   <td>{{ $inventory->cost }}</td>
                 @endif
                 
+                <td>{{ $inventory->dlp }}</td>
                 <td>{{ $inventory->wholesale_rate }}</td>
-                <td>{{ $inventory->offer_rate }}</td>
-                <td>{{ $inventory->offer_start }}</td>
-                <td>{{ $inventory->offer_end }}</td>
                 <td>{{ $inventory->mrp }}</td>          
                 <td>{{ $inventory->batch_code }}</td>
 

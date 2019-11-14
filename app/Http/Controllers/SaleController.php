@@ -64,9 +64,7 @@ class SaleController extends Controller
         $last_invoice = Sale::latest('id')->first();
 
         if($last_invoice != NULL) {
-
-            $last_code = preg_replace("/[^0-9\.]/", '', $last_invoice->invoice_no);
-            $last_code = $last_code + 1;
+            $last_code = $last_invoice->id + 1;
             $invoice_id = 'IN' . sprintf('%06d', ($last_code));
 
         }
@@ -117,10 +115,16 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
-        // get the invoice id
+        $last_invoice = Sale::latest('id')->first();
 
-        $invoice_no = $this->getInvoiceNumber($request->invoice_no);
+        if($last_invoice != NULL) {
+            $last_code = $last_invoice->id + 1;
+            $invoice_no = 'IN' . sprintf('%06d', ($last_code));
+
+        }
+        else {
+            $invoice_no = 'IN000001';
+        }
 
         // get the sales person name
 
@@ -202,7 +206,7 @@ class SaleController extends Controller
 
     public function show_invoice(Request $request, Sale $sale)
     {
-        $sale_date = Carbon::parse($sale->date)->format('Y-m-d h:m:s');
+        $sale_date = Carbon::parse($sale->date)->format('Y-m-d H:i:s');
 
         $max_products = 30;
         $sale->amount_after_discount;

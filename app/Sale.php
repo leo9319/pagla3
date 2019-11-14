@@ -48,4 +48,13 @@ class Sale extends Model
         return $total_amount;
     }
 
+    public function preDiscountgetTotal()
+    {
+        // get all the products that are with this invoice
+
+        return $this->sale_products->sum(function($t){ 
+            return $t->price_per_unit * $t->quantity; 
+        });
+    }
+
 }

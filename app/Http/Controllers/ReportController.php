@@ -72,21 +72,27 @@ class ReportController extends Controller
         else if($report_name == 5) {
             // Sales
             if ($table_id == 1) {
-                $detailed_sales = DB::table('sales_products AS SP')
-                 ->select('S.date', 'C.party_name', 'PT.type AS party_type', 'P.product_name', 'P.product_code','PDT.type AS product_type', 'SP.commission_percentage', 'S.present_sr_id AS sr_name', 'Z.zone', 'S.amount_after_discount')
-                 ->join('sales AS S', 'SP.invoice_no', 'S.invoice_no')
-                 ->join('parties AS C', 'C.id', 'S.client_id')
-                 ->join('party_types AS PT', 'C.party_type_id', 'PT.id' )
-                 ->join('products AS P', 'P.id' ,  'SP.product_id')
-                 ->join('product_types AS PDT', 'PDT.id',  'P.product_type')
-                 ->join('zones AS Z', 'Z.id', 'C.zone')
-                 ->where('S.date', '>=', $start_date)
-                 ->where('S.date', '<=', $end_date)
-                 ->where('S.audit_approval', 1)
-                 ->where('S.management_approval', 1)
-                 ->orderBy('SP.product_id', 'asc')
-                 ->orderBy('C.id', 'asc')
-                 ->get();
+
+                // $detailed_sales = DB::table('sales_products AS SP')
+                //  ->select('S.date', 'C.party_name', 'PT.type AS party_type', 'P.product_name', 'P.product_code','PDT.type AS product_type', 'SP.commission_percentage', 'S.present_sr_id AS sr_name', 'Z.zone', 'S.amount_after_discount')
+                //  ->join('sales AS S', 'SP.invoice_no', 'S.invoice_no')
+                //  ->join('parties AS C', 'C.id', 'S.client_id')
+                //  ->join('party_types AS PT', 'C.party_type_id', 'PT.id' )
+                //  ->join('products AS P', 'P.id' ,  'SP.product_id')
+                //  ->join('product_types AS PDT', 'PDT.id',  'P.product_type')
+                //  ->join('zones AS Z', 'Z.id', 'C.zone')
+                //  ->where('S.date', '>=', $start_date)
+                //  ->where('S.date', '<=', $end_date)
+                //  ->where('S.audit_approval', 1)
+                //  ->where('S.management_approval', 1)
+                //  ->orderBy('SP.product_id', 'asc')
+                //  ->orderBy('C.id', 'asc')
+                //  ->get();
+
+                $detailed_sales = Sale::whereBetween('date', [$start_date, $end_date])
+                                      ->where('audit_approval', 1)
+                                      ->where('management_approval', 1)
+                                      ->get();
                     
                 return Excel::download(new DailyReportExportDetailSales($detailed_sales, $start_date, $end_date), 'Detailed Sales Report (Daily).xlsx');
             }

@@ -4,6 +4,11 @@
 	<title>Invoice</title>
 	<link rel="stylesheet" type="text/css" href="{{asset('css/government.css')}}">
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<style type="text/css">
+		td {
+		  font-size: 14px;
+		}
+	</style>
 </head>
 <body>
 

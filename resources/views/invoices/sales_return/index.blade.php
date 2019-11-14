@@ -10,6 +10,14 @@
         <a href="#"><button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">Create Sales Return</button></a>
       @endif
     </div>
+
+    @if(session()->has('message'))
+        <div class="alert alert-danger text-center">
+            {{ session()->get('message') }}
+        </div>
+    @endif
+
+
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

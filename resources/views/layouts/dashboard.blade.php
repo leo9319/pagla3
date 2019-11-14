@@ -169,7 +169,7 @@
           </a>
         </li>
 
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
+{{--         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#offerCollapse" data-parent="#exampleAccordion">
             <i class="fas fa-hourglass-start"></i>
             <span class="nav-link-text">Offers</span>
@@ -184,7 +184,7 @@
               <a href="{{ route('offer-types.index') }}">Offer Type</a>
             </li>
           </ul>
-        </li>
+        </li> --}}
 
         @endif
 

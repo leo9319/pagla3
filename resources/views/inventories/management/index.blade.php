@@ -23,10 +23,8 @@
               <th>Quantity</th>
               <th>Expiry date</th>
               <th>Cost</th>
-              <th>Wholesale rate</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>MRP</th>
               <th>Batch Code</th>
               <th>Status</th>
@@ -43,10 +41,8 @@
               <th>Quantity</th>
               <th>Expiry date</th>
               <th>Cost</th>
-              <th>Wholesale rate</th>
-              <th>Offer Rate</th>
-              <th>Offer Start</th>
-              <th>Offer End</th>
+              <th>DLP</th>
+              <th>TP</th>
               <th>MRP</th>
               <th>Batch Code</th>
               <th>Status</th>
@@ -72,11 +68,9 @@
                 <td>{{ $inventory->quantity }}</td>
                 <td>{{ $inventory->expiry_date }}</td>
                 <td>{{ $inventory->cost }}</td>
+                <td>{{ $inventory->dlp }}</td>
                 <td>{{ $inventory->wholesale_rate }}</td>
-                <td>{{ $inventory->offer_rate }}</td>
-                <td>{{ $inventory->offer_start }}</td>
-                <td>{{ $inventory->offer_end }}</td>
-                <td>{{ $inventory->mrp }}</td>          
+                <td>{{ $inventory->mrp }}</td>     
                 <td>{{ $inventory->batch_code }}</td>
 
                 <!-- Management Approval -->

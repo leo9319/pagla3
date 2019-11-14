@@ -32,30 +32,18 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-{{--               <th>Total Sale (Before VAT)</th>
-              <th>Total Sale (After VAT)</th> --}}
-              <th>Sales Person</th>
+              <th>Total Sales</th>
               <th>Remarks</th>
 
-              @if($user->user_type == 'management' || $user->user_type == 'audit')
+              @if($user->user_type == 'audit')
                 <th>Status</th>
-              @else
-                <!-- Do nothing -->
               @endif
 
               @if($user->user_type == 'audit')
                 <th>Management Approved</th>
               @endif
 
-              @if($user->user_type == 'management')
-                <th>Audit Approved</th>
-              @endif
-
               <th>Invoice</th>
-
-              @if($user->user_type == 'management')
-                <th>Credit Limit Status</th>
-              @endif
 
               @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')
               @else
@@ -71,12 +59,9 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-{{--               <th>Total Sale (Before VAT)</th>
-              <th>Total Sale (After VAT)</th> --}}
-              <th>Sales Person</th>
               <th>Remarks</th>
 
-              @if($user->user_type == 'management' || $user->user_type == 'audit')
+              @if($user->user_type == 'audit')
                 <th>Status</th>
               @else
                 <!-- Do nothing -->
@@ -86,15 +71,7 @@
                 <th>Management Approved</th>
               @endif
 
-              @if($user->user_type == 'management')
-                <th>Audit Approved</th>
-              @endif
-
               <th>Invoice</th>
-
-              @if($user->user_type == 'management')
-                <th>Credit Limit Status</th>
-              @endif
 
               @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')
               @else
@@ -109,37 +86,10 @@
                 <td>{{ $sale->id }}</td>
                 <td>{{ Carbon\Carbon::parse($sale->date)->format('d-m-y') }}</td>
                 <td><a href="{{ route('sales.preview', ['sale'=>$sale->id]) }}">{{ $sale->invoice_no }}</a></td>
-                <td>
-                    @foreach($sale->clients as $client)
-                      {{ $client->party_id }}
-                    @endforeach
-                </td>
-                <td>
-                   @foreach($sale->clients as $client)
-                      {{ $client->party_name }}
-                    @endforeach
-                </td>
-{{--                 <td>{{ number_format($sale->getTotal('sales without vat'), 2) }}</td>
-                <td>{{ number_format($sale->getTotal('sales with vat'), 2) }}</td> --}}
-                <td>{{ $sale->present_sr_id }}</td>
+                <td>{{ $sale->client->party_id }}</td>
+                <td>{{ $sale->client->party_name }}</td>
+                <td>{{ $sale->total_sales }}</td>
                 <td>{{ $sale->remarks }}</td>
-
-                <!-- Management Approval -->
-                @if($user->user_type == 'management')
-                  @if($sale->management_approval == -1)
-                    <td>
-                      {{ link_to_route('sales.management.approval','Approve', [$sale->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
-
-                      {{ link_to_route('sales.management.dissapproval','Dissaprove', [$sale->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
-                    </td>
-                  @elseif($sale->management_approval == 1)
-                    <td><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->management_approval == 0)
-                    <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
-                @else
-                  <!-- Do nothing -->
-                @endif
 
                 <!-- Audit Approval -->
                 @if($user->user_type == 'audit')
@@ -169,73 +119,10 @@
                   @endif
                 @endif
 
-                <!-- Showing audit approval to management -->
-                @if($user->user_type == 'management')
-                  @if($sale->audit_approval == 1)
-                    <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->audit_approval == -1)
-                    <td class="text-center"><p class="text-info font-weight-bold">Decision Pending</p></td>
-                  @else
-                    <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
-                @endif
-
                 @if($sale->management_approval == 1 && $sale->audit_approval == 1)
                   <td><a href="{{ route('sales.date', ['id' => $sale->id]) }}">Generate Invoice</a></td>
                 @else
                   <td><p class="text-danger font-weight-bold">Approval Pending!</p></td>
-                @endif
-
-                @if($user->user_type == 'management')
-                  @if($sale->management_approval == -1)
-                  <?php 
-                      $sum_total_sales = 0; 
-                      $sum_total_sales_return = 0;
-                      $sum_payment_received_without_cheque = 0;
-                      $sum_payment_received_with_cheque = 0;
-                  ?>
-                  @foreach($sale->clients as $client)
-                    <!-- These are all the dues -->
-                    @foreach($client->sales as $client_sale)
-                      <?php            
-                          $sum_total_sales += $client_sale->amount_after_discount; 
-                      ?>
-                    @endforeach
-                    <!-- Let us find all the sales return -->
-                    @foreach($client->sales_return as $client_sales_return)
-                      <?php            
-                          $sum_total_sales_return += $client_sales_return->amount_after_discount; 
-                      ?>
-                    @endforeach
-                    <!-- Let us find the payment received without cheque -->
-                    @foreach($client->payments_received_without_cheque as $payment_received_without_cheque)
-                      <?php            
-                          $sum_payment_received_without_cheque += $payment_received_without_cheque->total_received; 
-                      ?>
-                    @endforeach
-                    <!-- Let us find the payment received with cheque -->
-                    @foreach($client->payments_received_with_cheque as $payment_received_with_cheque)
-                      <?php            
-                          $sum_payment_received_with_cheque += $payment_received_with_cheque->total_received; 
-                      ?>
-                    @endforeach
-
-                        <?php
-                            $limit_so_far = $sum_total_sales - $sum_total_sales_return - $sum_payment_received_without_cheque - $sum_payment_received_with_cheque + $sale->amount_after_discount;
-
-                            if ($limit_so_far > $client->credit_limit) {
-                                echo '<td class="text-center"><p class="text-danger font-weight-bold">Credit Limit Exceeded!</p></td>';
-                            }
-                            else {
-                              echo "<td>". number_format($limit_so_far). "</td>";
-
-                            }
-                        ?>
-
-                  @endforeach
-                  @else
-                    <td></td>
-                  @endif
                 @endif
 
                 @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')

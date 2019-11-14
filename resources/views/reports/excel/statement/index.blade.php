@@ -34,7 +34,7 @@
 								<div>
 									<div class="form-group">
 										{!! Form::label('party_id', 'Select Party:') !!}
-										{!! Form::select('party_id', $clients->pluck('party_name', 'id'), null, ['class'=>'form-control']) !!}
+										{!! Form::select('party_id', $clients->pluck('party_name', 'id'), null, ['class'=>'form-control select2']) !!}
 									</div>
 								</div>
 							</div>
@@ -97,5 +97,16 @@
     </div>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+<script type="text/javascript"> 
+
+	$(".select2").select2({
+      placeholder: 'Select a value', 
+      allowClear: true
+    });
+
+</script>
 
 @endsection

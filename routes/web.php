@@ -155,18 +155,18 @@ Route::resources([
 
 Route::get('reports', function () {
     return view('reports.show');
-})->name('reports');
+})->name('reports')->middleware('role:superadmin,management,audit');
 
 // daily reports
-Route::get('daily_report', 'ReportController@dailyReport')->name('reports.daily');
+Route::get('daily_report', 'ReportController@dailyReport')->name('reports.daily')->middleware('role:superadmin,management,audit');
 Route::post('daily_report', 'ReportController@dailyReportGenerator')->name('reports.daily.generate');
 
 // monthly reports
-Route::get('monthly_report', 'ReportController@monthlyReport')->name('reports.monthly');
+Route::get('monthly_report', 'ReportController@monthlyReport')->name('reports.monthly')->middleware('role:superadmin,management,audit');
 Route::post('monthly_report', 'ReportController@monthlyReportGenerator')->name('reports.monthly.generate');
 
 // monthly statement
-Route::get('monthly_statement', 'ReportController@monthlyStatement')->name('statement.monthly');
+Route::get('monthly_statement', 'ReportController@monthlyStatement')->name('statement.monthly')->middleware('role:superadmin,management,audit');
 Route::post('monthly_statement', 'ReportController@monthlyStatementGenerator')->name('statement.monthly.generate');
 Route::post('monthly_statement/all-clients', 'ReportController@monthlyStatementAllClients')->name('statement.monthly.all_clients');
 
