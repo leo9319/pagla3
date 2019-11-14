@@ -116,29 +116,22 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         $last_invoice = Sale::latest('id')->first();
-
-        if($last_invoice != NULL) {
-            $last_code = $last_invoice->id + 1;
-            $invoice_no = 'IN' . sprintf('%06d', ($last_code));
-
-        }
-        else {
-            $invoice_no = 'IN000001';
-        }
-
-        // get the sales person name
-
-        $sales_person_name = DB::table('h_r_s')->where('id', $request->present_sr_id)->first()->name;
+        $invoice_id = 'IN' . sprintf('%06d', ($last_invoice->id + 1));
 
         $sale = new Sale;
 
-        $sale->date          = $request->date;
-        $sale->invoice_no    = $invoice_no;
-        $sale->client_id     = $request->client_id; 
-        $sale->total_sales   = $request->total_sales_before_vat;
-        $sale->vat           = $request->party_vat;
-        $sale->present_sr_id = $sales_person_name;
-        $sale->remarks       = $request->remarks;
+        // get the sales person name
+        $sales_person_name = DB::table('h_r_s')->where('id', $request->present_sr_id)->first()->name;
+
+        $sale->date                             = $request->date;
+        $sale->invoice_no                       = $invoice_id;
+        $sale->client_id                        = $request->client_id; 
+        $sale->total_sales                      = $request->total_sales_before_vat;
+        $sale->amount_after_vat_and_discount    = $request->total_sales_after_vat;
+        $sale->amount_before_vat_after_discount = $request->total_sales_before_vat;
+        $sale->vat                              = $request->party_vat;
+        $sale->present_sr_id                    = $sales_person_name;
+        $sale->remarks                          = $request->remarks;
         $sale->save();
 
         $counter = count($request->product_code);
@@ -148,7 +141,7 @@ class SaleController extends Controller
         for ($i=0; $i < $counter; $i++) { 
 
             DB::table('sales_products')->insert([
-                'invoice_no'            => $invoice_no,
+                'invoice_no'            => $invoice_id,
                 'product_id'            => $request->product_code[$i],
                 'price_per_unit'        => $request->price_per_unit_after_discount[$i],
                 'quantity'              => $request->quantity[$i],

@@ -32,7 +32,8 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-              <th>Total Sales</th>
+              <th>Sales (Before Vat)</th>
+              <th>Sales (After Vat)</th>
               <th>Remarks</th>
 
               @if($user->user_type == 'audit')
@@ -60,6 +61,8 @@
               <th>Client Code</th>
               <th>Client Name</th>
               <th>Remarks</th>
+              <th>Sales (Before Vat)</th>
+              <th>Sales (After Vat)</th>
 
               @if($user->user_type == 'audit')
                 <th>Status</th>
@@ -88,7 +91,8 @@
                 <td><a href="{{ route('sales.preview', ['sale'=>$sale->id]) }}">{{ $sale->invoice_no }}</a></td>
                 <td>{{ $sale->client->party_id }}</td>
                 <td>{{ $sale->client->party_name }}</td>
-                <td>{{ $sale->total_sales }}</td>
+                <td>{{ number_format((float)$sale->amount_before_vat_after_discount, 2) }}</td>
+                <td>{{ number_format((float)$sale->amount_after_vat_and_discount, 2) }}</td>
                 <td>{{ $sale->remarks }}</td>
 
                 <!-- Audit Approval -->
@@ -411,7 +415,7 @@
         
         for (var i = 0; i < numberOfProducts.value; i++) {
 
-          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_before_discount", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit_before_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_after_discount", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit_after_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateTotalAmount(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
+          var html = '<div class="form-group"> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_code", "Product Code") !!} {!! Form:: select("product_code[]", $products->pluck("product_code", "id"), null, ["class"=>"form-control select2", "id"=>"productid-#", "style"=>"width:350px", "onchange"=>"checkWithProductCode(this, #)"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_name", "Product Name") !!} {!! Form:: select("product_name[]", $products->pluck("product_name", "id"), null, ["class"=>"form-control select2", "id"=>"productName-#", "style"=>"width:350px", "onchange"=>"checkWithProductName(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("product_type", "Product Types") !!} {!! Form:: text("product_type[]", null, ["class"=>"form-control readonly", "id"=>"productType-#"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("brand", "Brand") !!} {!! Form:: text("brand[]", null, ["class"=>"form-control readonly", "id"=>"productBrand-#"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_before_discount", "Price/Unit (Before Discount)") !!} {!! Form:: text("price_per_unit_before_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceBeforeDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("discount", "Discount") !!} {!! Form:: number("discount[]", null, ["class"=>"form-control", 'step' => '0.01', "id"=>"discount-#", "onchange"=>"discount(this, #)"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("price_per_unit_after_discount", "Price/Unit (After Discount)") !!} {!! Form:: text("price_per_unit_after_discount[]", null, ["class"=>"form-control readonly", "id"=>"productPriceAfterDiscount-#", "required"]) !!} </div> </div> <div class="col-md-6"> <div class="form-group"> {!! Form:: label("quantity", "Quantity") !!} {!! Form:: text("quantity[]", null, ["class"=>"form-control", "placeholder"=>"Enter Quantity", "id"=>"quantity-#", "required"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_before_vat", "Total Before VAT") !!} {!! Form:: text("total_before_vat[]", null, ["class"=>"form-control", "id"=>"totalBeforeVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("vat", "Vat %") !!} {!! Form:: text("vat[]", null, ["class"=>"form-control", "id"=>"vat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("total_after_vat", "Total After VAT") !!} {!! Form:: text("total_after_vat[]", null, ["class"=>"form-control", "id"=>"totalAfterVat-#", "readonly"]) !!} </div> </div> </div> <div class="row"> <div class="col-md-12"> <div class="form-group"> {!! Form:: label("remark", "Remark:") !!} {!! Form:: text("remark[]", null, ["class"=>"form-control", "id"=>"remark-#"]) !!} </div> </div> </div> <a href="javascript:void()" class="btn btn-warning btn-block" id="commission" onclick="calculateTotalAmount(#)">Calculate Total</a> <a href="javascript:void()" class="btn btn-danger btn-block" id="remove" name="#">Remove Product</a> </div>  ';
 
             html = html.replace(/#/g, x);
 
@@ -613,46 +617,21 @@
 
   function calculateTotalAmount(x) {
 
-    var ppu_before_discount     = document.getElementById('productPriceBeforeDiscount-' + x);
-    var discount                = document.getElementById('discount-' + x);
-    var total_before_vat        = document.getElementById('totalBeforeVat-' + x);
-    var quantity                = document.getElementById('quantity-' + x);
-    var ppu_after_discount      = document.getElementById('productPriceAfterDiscount-' + x);
-    var total_after_vat         = document.getElementById('totalAfterVat-' + x);
-    
-
-    ppu_after_discount.value    = ppu_before_discount.value - discount.value;
-    
-    total_before_vat.value      = ppu_after_discount.value * quantity.value;
-    total_after_vat.value       = (parseFloat(total_before_vat.value)  * vat)/100 + parseFloat(total_before_vat.value);
+    var ppu_before_discount  = document.getElementById('productPriceBeforeDiscount-' + x);
+    var discount             = document.getElementById('discount-' + x);
+    var total_before_vat     = document.getElementById('totalBeforeVat-' + x);
+    var quantity             = document.getElementById('quantity-' + x);
+    var ppu_after_discount   = document.getElementById('productPriceAfterDiscount-' + x);
+    var total_after_vat      = document.getElementById('totalAfterVat-' + x);
+ 
+    ppu_after_discount.value = (ppu_before_discount.value - discount.value).toFixed(2);
+ 
+    total_before_vat.value   = ppu_after_discount.value * quantity.value;
+    total_after_vat.value    = ((parseFloat(total_before_vat.value)  * vat)/100 + parseFloat(total_before_vat.value)).toFixed(2);
 
     document.getElementById('total-amount').value = '';
     
   }
-
-  // function totalAmountAfterDiscount() {
-  //   var discount_amount = document.getElementById('discount-amount');
-  //   var discount_percentage = document.getElementById('discount-percentage');
-  //   var after_discount = document.getElementById('after-discount');
-  //   var total_amount = document.getElementById('total-amount');
-  //   var discount_amount_on_percentage;
-
-  //   if (discount_percentage.value == "") {
-  //     // alert('Percentage is empty');
-  //     after_discount.value = total_amount.value - discount_amount.value;
-  //     discount_percentage.value = ((discount_amount.value/total_amount.value) * 100).toFixed(2);
-  //   }
-  //   else if (discount_amount.value == ""){
-  //     // alert('Amount is empty');
-  //     discount_amount_on_percentage = (discount_percentage.value * total_amount.value)/100;
-  //     discount_amount.value = discount_amount_on_percentage;
-  //     after_discount.value = total_amount.value - discount_amount_on_percentage;
-  //   }
-
-  //   else {
-  //     alert('Clear both fields and enter either Percentage OR Amount!');
-  //   } 
-  // }
 
   function discount(elem, number) {
     document.getElementById('amount-after-product-discount-' + number).value = '';

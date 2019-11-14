@@ -150,7 +150,7 @@
                             <div class="col-md-6">
 
                                 <div class="form-group">
-                                    {!! Form::label('amount_before_discount', 'Total Amount Before Discount', ['class' => 'font-weight-bold']) !!} 
+                                    {!! Form::label('amount_before_discount', 'Total Amount Before VAT', ['class' => 'font-weight-bold']) !!} 
                                     {!! Form::text('amount_after_discount', $sales->getTotal('sales without vat'), ['class'=>'form-control form-control-lg', 'disabled']) !!}
                                 </div>
 
@@ -159,7 +159,7 @@
                             <div class="col-md-6">
 
                                 <div class="form-group">
-                                    {!! Form::label('amount_after_discount', 'Total Amount After Discount', ['class' => 'font-weight-bold']) !!}
+                                    {!! Form::label('amount_after_discount', 'Total Amount After VAT', ['class' => 'font-weight-bold']) !!}
                                     {!! Form::text('amount_after_discount', $sales->getTotal('sales with vat'), ['class'=>'form-control form-control-lg', 'disabled']) !!}
                                 </div>
 
