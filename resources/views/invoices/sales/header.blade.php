@@ -22,15 +22,15 @@
 				<table id="company-address">
 					<tr>
 						<td>নিবন্ধিত ব্যক্তির নাম:</td>
-						<td>Purple Algorithm Ltd.</td>
+						<td><b>Purple Algorithm Ltd.</b></td>
 					</tr>
 					<tr>
 						<td>নিবন্ধিত ব্যক্তির বিআইএন:</td>
-						<td></td>
+						<td><b>{{ $sale->client->bin }}</b></td>
 					</tr>
 					<tr>
 						<td>চালানপত্রইস্যু ও ঠিকানা:</td>
-						<td>House-516 (A1), Road-10, Baridhara DOHS, Dhaka-1213</td>
+						<td><b>House-516 (A1), Road-10, Baridhara DOHS, Dhaka-1213</b></td>
 					</tr>
 				</table>
 
@@ -53,9 +53,9 @@
 		<div class="col-md-6">
 
 			<p>
-				ক্রেতার নাম: {{ $sale->client->party_name }}<br>
-				ক্রেতার বিএনআই: {{ $sale->client->bin }}<br>
-				সরবরাহের গন্তব্যস্থল: {{ $sale->client->address }}
+				ক্রেতার নাম: <b>{{ $sale->client->party_name }}</b><br>
+				ক্রেতার বিএনআই: <b>{{ $sale->client->bin }}</b><br>
+				সরবরাহের গন্তব্যস্থল: <b>{{ $sale->client->address }}</b>
 			</p>
 
 		</div>
@@ -63,9 +63,9 @@
 		<div class="col-md-6">
 
 			<p>
-				চালানপত্র নম্বর: {{ $sale->invoice_no }}<br>
-				ইস্যুর তারিখ: {{ Carbon\Carbon::parse($sale->date)->format('jS M, Y') }}<br>
-				ইস্যুর সময়: {{ Carbon\Carbon::parse($sale->updated_at)->format('h:i a') }}
+				চালানপত্র নম্বর: <b>{{ $sale->invoice_no }}</b><br>
+				ইস্যুর তারিখ: <b>{{ Carbon\Carbon::parse($sale->date)->format('jS M, Y') }}</b><br>
+				ইস্যুর সময়: <b>{{ Carbon\Carbon::parse($sale->updated_at)->format('h:i a') }}</b>
 			</p>
 
 		</div>

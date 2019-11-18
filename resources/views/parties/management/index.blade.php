@@ -19,6 +19,7 @@
               <th>Client ID</th>
               <th>Client Name</th>
               <th>Address</th>
+              <th>BIN</th>
               <th>Phone Number</th>
               <th>Email ID</th>
               <th>Contact Person</th>
@@ -36,6 +37,7 @@
               <th>Client ID</th>
               <th>Client Name</th>
               <th>Address</th>
+              <th>BIN</th>
               <th>Phone Number</th>
               <th>Email ID</th>
               <th>Contact Person</th>
@@ -54,6 +56,7 @@
                 <td>{{ $party->party_id }}</td>
                 <td>{{ $party->party_name }}</td>
                 <td>{{ $party->address }}</td>
+                <td>{{ $party->bin }}</td>
                 <td>{{ $party->party_phone }}</td>
                 <td>{{ $party->email }}</td>
                 <td>{{ $party->contact_person }}</td>
@@ -71,30 +74,33 @@
                 </td>
 
                 <!-- Management Approaval -->
+                @if($user->user_type == 'management')
+                  @if($party->management_approval == -1)
+                    <td>
+                      {{ link_to_route('parties.management.approval','Approve', [$party->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
 
-                @if($party->management_approval == -1)
-                  <td>
-                    {{ link_to_route('parties.management.approval','Approve', [$party->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
 
+                      {{ link_to_route('parties.management.dissapproval','Dissaprove', [$party->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
+                    </td>
+                  @elseif($party->management_approval == 1)
+                    <td><p class="text-success font-weight-bold">Approved</p></td>
+                  @elseif($party->management_approval == 0)
+                    <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
 
-                    {{ link_to_route('parties.management.dissapproval','Dissaprove', [$party->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
-                  </td>
-                @elseif($party->management_approval == 1)
-                  <td><p class="text-success font-weight-bold">Approved</p></td>
-                @elseif($party->management_approval == 0)
-                  <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-
+                  @endif
+                @else
+                  <!-- Do nothing -->
                 @endif
 
-
                 <!-- Show Management the Audit Approval -->
-
-                @if($party->audit_approval == 1)
-                  <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
-                @elseif($party->audit_approval == -1)
-                  <td class="text-center"><p class="text-info font-weight-bold">Decision Pendings</p></td>
-                @else
-                  <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
+                @if($user->user_type == 'management')
+                  @if($party->audit_approval == 1)
+                    <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
+                  @elseif($party->audit_approval == -1)
+                    <td class="text-center"><p class="text-info font-weight-bold">Decision Pendings</p></td>
+                  @else
+                    <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
+                  @endif
                 @endif
                 
               </tr>
@@ -164,6 +170,11 @@
                           <div class="form-group">
                             {!! Form::label('zone', 'Zone:') !!}
                             {!! Form::select('zone', $zones, null, ['class'=>'form-control']) !!}
+                          </div>
+
+                          <div class="form-group">
+                            {!! Form::label('bin', 'BIN:') !!}
+                            {!! Form::text('bin', null, ['class'=>'form-control']) !!}
                           </div>
 
                         </div>

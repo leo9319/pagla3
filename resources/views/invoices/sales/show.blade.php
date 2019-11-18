@@ -46,12 +46,12 @@
 				      <td style="width: 40%">{{ $sale->sale_products[$i]->product->product_name }}</td>
 				      <td>1</td>
 				      <td>{{ $quantity = $sale->sale_products[$i]->quantity }}</td>
-				      <td>{{ number_format($ppu = $sale->sale_products[$i]->price_per_unit) }}</td>
-				      <td>{{ number_format($total = ($quantity * $ppu)) }}</td>
+				      <td>{{ number_format(($ppu = $sale->sale_products[$i]->price_per_unit), 2) }}</td>
+				      <td>{{ number_format(($total = ($quantity * $ppu)), 2) }}</td>
 				      <td></td>
 				      <td>{{ $sale->vat ?? 0 }}%</td>
-				      <td>{{ number_format($vat = $quantity * $ppu * $sale->vat/100) }}</td>
-				      <td>{{ number_format($vat + $total) }}</td>
+				      <td>{{ number_format(($vat = $quantity * $ppu * $sale->vat/100), 2) }}</td>
+				      <td>{{ number_format(($vat + $total), 2) }}</td>
 				    </tr>
 		
 				    <?php 

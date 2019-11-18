@@ -32,36 +32,14 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-{{--               <th>Total Sale (Before VAT)</th>
-              <th>Total Sale (After VAT)</th> --}}
+              <th>Sales (Before Vat)</th>
+              <th>Sales (After Vat)</th>
               <th>Sales Person</th>
               <th>Remarks</th>
-
-              @if($user->user_type == 'management' || $user->user_type == 'audit')
-                <th>Status</th>
-              @else
-                <!-- Do nothing -->
-              @endif
-
-              @if($user->user_type == 'audit')
-                <th>Management Approved</th>
-              @endif
-
-              @if($user->user_type == 'management')
-                <th>Audit Approved</th>
-              @endif
-
+              <th>Status</th>
+              <th>Audit Approved</th>
               <th>Invoice</th>
-
-              @if($user->user_type == 'management')
-                <th>Credit Limit Status</th>
-              @endif
-
-              @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')
-              @else
-                <th>Edit</th>
-                <th>Delete</th>
-              @endif
+              <th>Credit Limit Status</th>
             </tr>
           </thead>
           <tfoot>
@@ -71,36 +49,14 @@
               <th>Invoice ID</th>
               <th>Client Code</th>
               <th>Client Name</th>
-{{--               <th>Total Sale (Before VAT)</th>
-              <th>Total Sale (After VAT)</th> --}}
+              <th>Sales (Before Vat)</th>
+              <th>Sales (After Vat)</th>
               <th>Sales Person</th>
               <th>Remarks</th>
-
-              @if($user->user_type == 'management' || $user->user_type == 'audit')
-                <th>Status</th>
-              @else
-                <!-- Do nothing -->
-              @endif
-
-              @if($user->user_type == 'audit')
-                <th>Management Approved</th>
-              @endif
-
-              @if($user->user_type == 'management')
-                <th>Audit Approved</th>
-              @endif
-
+              <th>Status</th>
+              <th>Audit Approved</th>
               <th>Invoice</th>
-
-              @if($user->user_type == 'management')
-                <th>Credit Limit Status</th>
-              @endif
-
-              @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')
-              @else
-                <th>Edit</th>
-                <th>Delete</th>
-              @endif
+              <th>Credit Limit Status</th>
             </tr>
           </tfoot>
           <tbody>
@@ -109,75 +65,32 @@
                 <td>{{ $sale->id }}</td>
                 <td>{{ Carbon\Carbon::parse($sale->date)->format('d-m-y') }}</td>
                 <td><a href="{{ route('sales.preview', ['sale'=>$sale->id]) }}">{{ $sale->invoice_no }}</a></td>
-                <td>
-                    @foreach($sale->clients as $client)
-                      {{ $client->party_id }}
-                    @endforeach
-                </td>
-                <td>
-                   @foreach($sale->clients as $client)
-                      {{ $client->party_name }}
-                    @endforeach
-                </td>
-{{--                 <td>{{ number_format($sale->getTotal('sales without vat'), 2) }}</td>
-                <td>{{ number_format($sale->getTotal('sales with vat'), 2) }}</td> --}}
+                <td>{{ $sale->client->party_id }}</td>
+                <td>{{ $sale->client->party_name }}</td>
+                <td>{{ number_format((float)$sale->amount_before_vat_after_discount, 2) }}</td>
+                <td>{{ number_format((float)$sale->amount_after_vat_and_discount, 2) }}</td>
                 <td>{{ $sale->present_sr_id }}</td>
                 <td>{{ $sale->remarks }}</td>
 
-                <!-- Management Approval -->
-                @if($user->user_type == 'management')
-                  @if($sale->management_approval == -1)
-                    <td>
-                      {{ link_to_route('sales.management.approval','Approve', [$sale->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
+                @if($sale->management_approval == -1)
+                  <td>
+                    {{ link_to_route('sales.management.approval','Approve', [$sale->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
 
-                      {{ link_to_route('sales.management.dissapproval','Dissaprove', [$sale->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
-                    </td>
-                  @elseif($sale->management_approval == 1)
-                    <td><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->management_approval == 0)
-                    <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
-                @else
-                  <!-- Do nothing -->
-                @endif
-
-                <!-- Audit Approval -->
-                @if($user->user_type == 'audit')
-                  @if($sale->audit_approval == -1)
-                    <td>
-                      {{ link_to_route('sales.audit.approval','Approve', [$sale->id], ['class' => 'btn btn-warning btn-sm btn-width']) }}
-
-                      {{ link_to_route('sales.audit.dissapproval','Dissaprove', [$sale->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
-                    </td>
-                  @elseif($sale->audit_approval == 1)
-                    <td><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->audit_approval == 0)
-                    <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
-                @else
-                  <!-- Do nothing -->
-                @endif
-
-                <!-- Showing management approval to audit -->
-                @if($user->user_type == 'audit')
-                  @if($sale->management_approval == 1)
-                    <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->management_approval == -1)
-                    <td class="text-center"><p class="text-info font-weight-bold">Decision Pending</p></td>
-                  @else
-                    <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
+                    {{ link_to_route('sales.management.dissapproval','Dissaprove', [$sale->id], ['class' => 'btn btn-secondary btn-sm btn-width']) }}
+                  </td>
+                @elseif($sale->management_approval == 1)
+                  <td><p class="text-success font-weight-bold">Approved</p></td>
+                @elseif($sale->management_approval == 0)
+                  <td><p class="text-danger font-weight-bold">Dissapproved!</p></td>
                 @endif
 
                 <!-- Showing audit approval to management -->
-                @if($user->user_type == 'management')
-                  @if($sale->audit_approval == 1)
-                    <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
-                  @elseif($sale->audit_approval == -1)
-                    <td class="text-center"><p class="text-info font-weight-bold">Decision Pending</p></td>
-                  @else
-                    <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
-                  @endif
+                @if($sale->audit_approval == 1)
+                  <td class="text-center"><p class="text-success font-weight-bold">Approved</p></td>
+                @elseif($sale->audit_approval == -1)
+                  <td class="text-center"><p class="text-info font-weight-bold">Decision Pending</p></td>
+                @else
+                  <td class="text-center"><p class="text-danger font-weight-bold">Dissapproved!</p></td>
                 @endif
 
                 @if($sale->management_approval == 1 && $sale->audit_approval == 1)
@@ -220,34 +133,22 @@
                       ?>
                     @endforeach
 
-                        <?php
-                            $limit_so_far = $sum_total_sales - $sum_total_sales_return - $sum_payment_received_without_cheque - $sum_payment_received_with_cheque + $sale->amount_after_discount;
+                      <?php
+                          $limit_so_far = $sum_total_sales - $sum_total_sales_return - $sum_payment_received_without_cheque - $sum_payment_received_with_cheque + $sale->amount_after_discount;
 
-                            if ($limit_so_far > $client->credit_limit) {
-                                echo '<td class="text-center"><p class="text-danger font-weight-bold">Credit Limit Exceeded!</p></td>';
-                            }
-                            else {
-                              echo "<td>". number_format($limit_so_far). "</td>";
+                          if ($limit_so_far > $client->credit_limit) {
+                              echo '<td class="text-center"><p class="text-danger font-weight-bold">Credit Limit Exceeded!</p></td>';
+                          }
+                          else {
+                            echo "<td>". number_format($limit_so_far). "</td>";
 
-                            }
-                        ?>
+                          }
+                      ?>
 
                   @endforeach
                   @else
                     <td></td>
                   @endif
-                @endif
-
-                @if($user->user_type == 'sales' || $user->user_type == 'audit'  || $user->user_type == 'warehouse' || $user->user_type == 'hr')
-                @else
-                <td>{{ link_to_route('sales.edit','Edit', [$sale->id], ['class' => 'btn btn-primary']) }}</td>
-                <td>
-                    {!! Form::open(['route'=>['sales.destroy', $sale->id], 'method'=>'DELETE']) !!}
-
-                    {!! Form::button('Delete', ['class'=>'btn btn-danger', 'type'=>'submit']) !!}
-
-                    {!! Form::close() !!}
-                </td>
                 @endif
                 
               </tr> 
@@ -607,7 +508,7 @@
 
       }
 
-      else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
+      else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
 
         product_price.value = data.wholesale_rate;
 
@@ -668,7 +569,7 @@
         if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
           product_price.value = data.dlp;
         }
-        else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka') {
+        else if(party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
           product_price.value = data.wholesale_rate;
         }
         else {
@@ -742,30 +643,6 @@
     document.getElementById('total-amount').value = '';
     
   }
-
-  // function totalAmountAfterDiscount() {
-  //   var discount_amount = document.getElementById('discount-amount');
-  //   var discount_percentage = document.getElementById('discount-percentage');
-  //   var after_discount = document.getElementById('after-discount');
-  //   var total_amount = document.getElementById('total-amount');
-  //   var discount_amount_on_percentage;
-
-  //   if (discount_percentage.value == "") {
-  //     // alert('Percentage is empty');
-  //     after_discount.value = total_amount.value - discount_amount.value;
-  //     discount_percentage.value = ((discount_amount.value/total_amount.value) * 100).toFixed(2);
-  //   }
-  //   else if (discount_amount.value == ""){
-  //     // alert('Amount is empty');
-  //     discount_amount_on_percentage = (discount_percentage.value * total_amount.value)/100;
-  //     discount_amount.value = discount_amount_on_percentage;
-  //     after_discount.value = total_amount.value - discount_amount_on_percentage;
-  //   }
-
-  //   else {
-  //     alert('Clear both fields and enter either Percentage OR Amount!');
-  //   } 
-  // }
 
   function discount(elem, number) {
     document.getElementById('amount-after-product-discount-' + number).value = '';

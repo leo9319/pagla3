@@ -19,7 +19,7 @@ use Auth;
 use Redirect;
 use Carbon\Carbon;
 
-define("DEFINED_DATE", new Carbon('2019-08-22 00:00:00'));
+define("DEFINED_DATE", new Carbon('2019-01-14 00:00:00'));
 
 class SaleController extends Controller
 {
