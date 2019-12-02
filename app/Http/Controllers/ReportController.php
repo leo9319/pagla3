@@ -413,67 +413,48 @@ class ReportController extends Controller
 
     public function monthlyStatementGenerator(Request $request)
     {
-        $start_date = $request->start_date;
-        $end_date   = $request->end_date;
-        $party_id   = $request->party_id;
+        $start_date                    = $request->start_date;
+        $end_date                      = $request->end_date;
+        $party_id                      = $request->party_id;
+         
+        $data['party']                 = $party = Party::find($party_id);
+        $data['statement_id']          = 'ODS_' . \Carbon\Carbon::now()->format('ymdHis');
+         
+        $data['sales']                 = $party->sales
+                                         ->where('date', '>=', $start_date)
+                                         ->where('date', '<=', $end_date);
+          
+        $data['returns']               = $party->sales_return
+                                        ->where('date', '>=', $start_date)
+                                        ->where('date', '<=', $end_date);
+          
+        $data['collections']           = $party->payments_received
+                                         ->where('cheque_clearing_status', '!=', 'Due')
+                                         ->where('date', '>=', $start_date)
+                                         ->where('date', '<=', $end_date);
+          
+          
+        $data['adjustments']           = $party->adjustmentedBalance
+                                         ->where('created_at', '>=', $start_date)
+                                         ->where('created_at', '<=', $end_date);
+ 
+        $data['last_date_last_month']  = \Carbon\Carbon::parse($request->start_date)
+                                         ->subMonth()
+                                         ->lastOfMonth();
+        
 
-        $client_profile = Party::find($party_id);
-        $client_name    = $client_profile->party_name;
-        $client_code    = $client_profile->party_id;
-        $statement_id   = 'ODS_' . \Carbon\Carbon::now()->format('ymdHis');
+        $data['balanceOfCurrentDateRange'] = $data['adjustments']->sum('amount') +  
+                                            $data['returns']->sum('amount_after_discount') + 
+                                            $data['collections']->sum('paid_amount') - 
+                                            ($data['sales']->sum('amount_after_discount') + 
+                                             (float)$data['sales']->sum('amount_after_vat_and_discount'));
 
-        $sales = DB::table('sales AS S')
-                    ->where('S.client_id', $party_id)
-                    ->where('S.date', '>=', $start_date)
-                    ->where('S.date', '<=', $end_date)
-                    ->where('S.audit_approval', 1)
-                    ->where('S.management_approval', 1)
-                    ->get();
 
-        $returns = DB::table('sales_returns AS SR')
-                    ->where('SR.client_id', $party_id)
-                    ->where('SR.date', '>=', $start_date)
-                    ->where('SR.date', '<=', $end_date)
-                    ->where('SR.audit_approval', 1)
-                    ->where('SR.management_approval', 1)
-                    ->get();
+        $data['balanceOnLastDayLastMonth'] = $party->getOverallBalance($data['last_date_last_month']->format('Y-m-d'));
 
-        $collections = DB::table('payment_receiveds AS PR')
-                        ->where('PR.client_code', $party_id)
-                        ->where('PR.cheque_clearing_status', '!=', 'Due')
-                        ->where('PR.date', '>=', $start_date)
-                        ->where('PR.date', '<=', $end_date)
-                        ->where('PR.sales_approval', 1)
-                        ->where('PR.management_approval', 1)
-                        ->get();
+        $data['balanceIncludingThisDateRange'] = $data['balanceOnLastDayLastMonth'] + $data['balanceOfCurrentDateRange'];
 
-        $adjustments = DB::table('adjusted_balances')
-                        ->where('client_id', $party_id)
-                        ->whereBetween('created_at', [$start_date, $end_date])
-                        ->where('sales_approval', 1)
-                        ->where('management_approval', 1)
-                        ->where('warehouse_approval', 1)
-                        ->get();
-
-        $balance =  $returns->sum('amount_after_discount') + 
-                    $collections->sum('paid_amount') - 
-                    $sales->sum('amount_after_discount') - 
-                    (float)$sales->sum('amount_after_vat_and_discount') + 
-                    $adjustments->sum('amount');
-
-        $overall_balance = $client_profile->getOverallBalance();
-
-        return view('reports.excel.statement.showMonthlyStatement')
-            ->with('sales', $sales)
-            ->with('returns', $returns)
-            ->with('collections', $collections)
-            ->with('adjustments', $adjustments)
-            ->with('client_name', $client_name)
-            ->with('client_code', $client_code)
-            ->with('client_profile', $client_profile)
-            ->with('statement_id', $statement_id)
-            ->with('balance', $balance)
-            ->with('overall_balance', $overall_balance);
+        return view('reports.excel.statement.showMonthlyStatement', $data);
     }
 
     public function monthlyStatementAllClients(Request $request)

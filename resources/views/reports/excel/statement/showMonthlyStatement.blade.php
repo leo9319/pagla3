@@ -34,19 +34,19 @@
         <table class="borderless">
           <tr>
             <td class="text-right font-weight-bold">To:</td>
-            <td>{{ $client_profile->party_name }}</td> 
+            <td>{{ $party->party_name }}</td> 
           </tr>
           <tr>
             <td class="text-right font-weight-bold">Address:</td>
-            <td>{{ $client_profile->address }}</td>
+            <td>{{ $party->address }}</td>
           </tr>
           <tr>
             <td class="text-right font-weight-bold">ATTN:</td>
-            <td>{{ $client_profile->contact_person }}</td>
+            <td>{{ $party->contact_person }}</td>
           </tr>
           <tr>
             <td class="text-right font-weight-bold">Phone:</td>
-            <td>{{ $client_profile->owner_number }}</td>
+            <td>{{ $party->owner_number }}</td>
           </tr>
         </table>
       </div>
@@ -62,18 +62,27 @@
           </tr> 
           <tr>
               <td class="meta-head">Customer ID:</td>
-              <td>{{ $client_code }}</td>
+              <td>{{ $party->party_id }}</td>
           </tr>    
         </table>
       </div>  
     </div>
 
     <p class="mt-4">
-      <b>
-        Current Month's Balance: {{ number_format($balance) }} BDT <br>
-        Overall Balance including current Month's Balance: {{ number_format($overall_balance) }} BDT <br>
-        Overall Balance excluding current Month's Balance: {{ number_format($overall_balance - $balance) }} BDT <br>
-      </b>
+      <table>
+          <tr>
+              <td style="background-color: #eeeeee">Balance on {{ $last_date_last_month->format('jS F, Y') }}:</td>
+              <td><b>{{ number_format($balanceOnLastDayLastMonth) }}</b></td>
+          </tr>
+          <tr>
+              <td style="background-color: #eeeeee">Current Month's Balance</td>
+              <td><b>{{ number_format($balanceOfCurrentDateRange) }}</b></td>
+          </tr> 
+          <tr>
+              <td style="background-color: #eeeeee">Balance including current month:</td>
+              <td><b>{{ number_format($balanceIncludingThisDateRange) }}</b></td>
+          </tr>    
+        </table>
     </p>
     
     <div class="row">

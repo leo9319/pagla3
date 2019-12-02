@@ -54,6 +54,15 @@ class Party extends Model
             ]);
     }
 
+    public function payments_received()
+    {
+        return $this->hasMany('App\PaymentReceived', 'client_code', 'id')
+            ->where([
+                'sales_approval' => 1,
+                'management_approval' => 1,
+            ]);
+    }
+
     public function adjustmentedBalance()
     {
         return $this->hasMany('App\AdjustedBalance', 'client_id', 'id')
@@ -99,13 +108,11 @@ class Party extends Model
 
     public function monthlyBalance($month, $year)
     {
-        $sales = $this->totalSales($month, $year);
-
-        $sales_return = $this->totalReturns($month, $year);
-
+        $sales            = $this->totalSales($month, $year);
+        $sales_return     = $this->totalReturns($month, $year);
         $payment_received = $this->totalPaymentReceived($month, $year);
 
-        return $total = $sales - $sales_return - $payment_received;
+        return $total     = $sales - $sales_return - $payment_received;
 
     }
 
@@ -146,13 +153,34 @@ class Party extends Model
         return $payment_received;
     }
 
-    public function getOverallBalance()
+    public function getOverallBalance($till_date = '')
     {
-        $total_sales = $this->sales->sum('amount_after_discount') + $this->sales->sum('amount_after_vat_and_discount');
-        $total_returns = $this->sales_return->sum('amount_after_discount');
-        $total_payment_received_without_cheque = $this->payments_received_without_cheque->sum('paid_amount');
-        $total_payment_received_with_cheque = $this->payments_received_with_cheque->sum('paid_amount');
-        $total_adjusted_balance = $this->adjustmentedBalance->sum('amount');
+        if(empty($till_date)) {
+            $till_date = \Carbon\Carbon::now()->format('d m y');
+        }
+
+        $total_sales = $this->sales
+                        ->where('date', '<=', $till_date)
+                        ->sum('amount_after_discount')
+                     + $this->sales
+                        ->where('date', '<=', $till_date)
+                        ->sum('amount_after_vat_and_discount');
+
+        $total_returns = $this->sales_return
+                        ->where('date', '<=', $till_date)
+                        ->sum('amount_after_discount');
+
+        $total_payment_received_without_cheque = $this->payments_received_without_cheque
+                                                    ->where('date', '<=', $till_date)
+                                                    ->sum('paid_amount');
+
+        $total_payment_received_with_cheque = $this->payments_received_with_cheque
+                                                    ->where('date', '<=', $till_date)
+                                                    ->sum('paid_amount');
+
+        $total_adjusted_balance = $this->adjustmentedBalance
+                                    ->where('date', '<=', $till_date)
+                                    ->sum('amount');
 
         $balance =  $total_returns + 
                     $total_payment_received_without_cheque +
