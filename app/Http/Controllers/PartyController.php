@@ -196,20 +196,24 @@ class PartyController extends Controller
         return redirect()->route('parties.index');
     }
 
-    public function findClientName(Request $request) 
+    public function findClient(Request $request) 
     {
-        $data = DB::table('parties')
-        ->join('party_types', 'parties.party_type_id', '=', 'party_types.id')
-        ->join('h_r_s', 'parties.zone', '=', 'h_r_s.zone')
-        ->select('parties.party_name', 'parties.party_type_id', 'parties.id', 'parties.zone', 'party_types.type', 'party_types.vat', 'h_r_s.id AS hr_id', 'h_r_s.name AS hr_name')
-        ->where('parties.id', '=', $request->id)
-        ->where('h_r_s.role', '=', 'Sales')
-        ->where('h_r_s.audit_approval', '=', 1)
-        ->where('h_r_s.management_approval', '=', 1)
-        ->where('h_r_s.sales_approval', '=', 1)
-        ->get();
+        $party = Party::find($request->id);
 
-        return response()->json($data);
+        $data['party_id']        = $request->id;
+        $data['party_code']      = $party->party_id;
+        $data['party_name']      = $party->party_name;
+        $data['sr_name']         = $party->modalZone->hrs->where('role', 'Sales')->first()->name ?? 'N/A';
+        $collector               = $party->modalZone->hrs->where('role', 'Collection')->first();
+        $data['collector_id']    = $collector->id ?? 'N/A';
+        $data['collector_name']  = $collector->name ?? 'N/A';
+        $data['party_type_id']   = $party->partyType->id;
+        $data['party_type_name'] = $party->partyType->type;
+        $data['vat']             = $party->partyType->vat;
+        $data['overall_balance'] = $party->getOverallBalance();
+
+        return $data;
+
     }
 
     public function findClientCode(Request $request) 

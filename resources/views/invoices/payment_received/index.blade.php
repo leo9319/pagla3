@@ -227,7 +227,7 @@
                           <div class="form-group">
                             {!! Form::label('client_code', 'Client Code') !!}
                             <br>
-                            {!! Form::select('client_code', $clients->pluck('party_id', 'id'), null, ['class'=>'form-control', 'id'=>'clientCode', 'style'=>'width:350px', 'onchange'=>'checkClientCode(this)']) !!}
+                            {!! Form::select('client_code', $clients->pluck('party_id', 'id'), null, ['class'=>'form-control', 'id'=>'clientCode', 'style'=>'width:350px', 'onchange'=>'checkClientName(this)']) !!}
                           </div> 
 
                           <div class="form-group">
@@ -266,7 +266,7 @@
                           <div class="form-group">
                             {!! Form::label('client_name', 'Client Name') !!}
                             <br>
-                            {!! Form::select('client_name', $clients->pluck('party_name', 'id'), null, ['class'=>'form-control', 'id'=>'clientName', 'style'=>'width:350px', 'onchange'=>'checkClientName(this)']) !!}
+                            {!! Form::select('client_name', $clients->pluck('party_name', 'id'), null, ['class'=>'form-control', 'id'=>'clientName', 'style'=>'width:350px', 'onchange'=>'checkClientCode(this)']) !!}
                           </div>
 
                           <div class="form-group">
@@ -317,90 +317,103 @@
     <!-- <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div> -->
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
-  <script type="text/javascript">
+<script type="text/javascript">
     $("#clientCode").select2({
-            placeholder: 'Select a Client ID', 
-            allowClear: true,
-            data: [{id: -1,
-                    text: '',
-                    selected: 'selected',
-                    search:'',
-                    hidden:true}]
-        });
+        placeholder: 'Select a Client ID',
+        allowClear: true,
+        data: [{
+            id: -1,
+            text: '',
+            selected: 'selected',
+            search: '',
+            hidden: true
+        }]
+    });
 
     $("#clientName").select2({
-            placeholder: 'Select a Client Name', 
-            allowClear: true,
-            data: [{id: -1,
-                    text: '',
-                    selected: 'selected',
-                    search:'',
-                    hidden:true}]
-        });
+        placeholder: 'Select a Client Name',
+        allowClear: true,
+        data: [{
+            id: -1,
+            text: '',
+            selected: 'selected',
+            search: '',
+            hidden: true
+        }]
+    });
 
     function checkClientCode(elem) {
-    var client_id = elem.value;
-    var op_cn="";
+        var client_id = elem.value;
+        var op_cn = "";
+        var op_hr = "";
 
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findClientName')!!}',
-      data: {'id':client_id},
-      success:function(data){
-        op_cn+='<option value="'+data[0].id+'">'+data[0].party_name+'</option>';
-        document.getElementById('clientName').innerHTML = op_cn;    
-        party_type_id = data[0].party_type_id;  
-      },
-      error:function(){
+        $.ajax({
+            type: 'get',
+            url: '{!!URL::to('findClient')!!}',
+            data: {
+                'id': client_id
+            },
+            success: function(data) {
+                op_cn += '<option value="' + data.party_id + '">' + data.party_code + '</option>';
+                op_hr += '<option value="' + data.collector_id + '">' + data.collector_name + '</option>';
+                document.getElementById('clientCode').innerHTML = op_cn;
+                document.getElementById('collector').innerHTML = op_hr;
+                party_type_id = data.party_type_id;
+            },
+            error: function() {
 
-      }
-    });   
-  }
+            }
+        });
+    }
 
-  function checkClientName(elem) {
-    var client_id = elem.value;
-    var op_cc="";
+    function checkClientName(elem) {
+        var client_id = elem.value;
+        var op_cc = "";
+        var op_hr = "";
 
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findClientCode')!!}',
-      data: {'id':client_id},
-      success:function(data){
-        console.log(data[0].party_id);
-        op_cc+='<option value="'+data[0].id+'">'+data[0].party_id+'</option>';
-        document.getElementById('clientCode').innerHTML = op_cc;   
-        party_type_id = data[0].party_type_id;     
-      },
-      error:function(){
+        $.ajax({
+            type: 'get',
+            url: '{!!URL::to('findClient')!!}',
+            data: {
+                'id': client_id
+            },
+            success: function(data) {
 
-      }
-    });   
-  }
+                op_cc += '<option value="' + data.party_id + '">' + data.party_name + '</option>';
+                op_hr += '<option value="' + data.collector_id + '">' + data.collector_name + '</option>';
+                document.getElementById('clientName').innerHTML = op_cc;
+                document.getElementById('collector').innerHTML = op_hr;
+                party_type_id = data.party_type_id;
+            },
+            error: function() {
 
-  function checkPaymentMethod(elem) {
-    var payment_method_id = elem.value;
-    var paid_amount = document.getElementById('paid_amount').value;
-    var gateway_charge;
+            }
+        });
+    }
 
-    $.ajax({
-      type: 'get',
-      url: '{!!URL::to('findGatewayCharge')!!}',
-      data: {'id':payment_method_id},
-      success:function(data){
-        document.getElementById('gc_percentage').value = data[0].gateway_charge;
-        gateway_charge = document.getElementById('gc').value = (paid_amount * data[0].gateway_charge)/100;  
-        document.getElementById('total_received').value = paid_amount - gateway_charge;  
+    function checkPaymentMethod(elem) {
+        var payment_method_id = elem.value;
+        var paid_amount = document.getElementById('paid_amount').value;
+        var gateway_charge;
 
+        $.ajax({
+            type: 'get',
+            url: '{!!URL::to('findGatewayCharge')!!}',
+            data: {
+                'id': payment_method_id
+            },
+            success: function(data) {
+                document.getElementById('gc_percentage').value = data[0].gateway_charge;
+                gateway_charge = document.getElementById('gc').value = (paid_amount * data[0].gateway_charge) / 100;
+                document.getElementById('total_received').value = paid_amount - gateway_charge;
 
-      },
-      error:function(){
+            },
+            error: function() {
 
-      }
-    });   
-  }
-
-  
-  </script>
+            }
+        });
+    }
+</script>
 @endsection

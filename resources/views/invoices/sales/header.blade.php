@@ -2,13 +2,13 @@
 
 	<div class="row">
 
-		<div class="col-md-3">
+		<div class="col-md-2">
 
 			<img src="{{ asset('images/bdgovt-logo.png') }}" alt="logo" height="115" width="115">
 
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-md-8">
 
 			<div class="text-center line-space">
 
@@ -26,7 +26,7 @@
 					</tr>
 					<tr>
 						<td>নিবন্ধিত ব্যক্তির বিআইএন:</td>
-						<td><b>{{ $sale->client->bin }}</b></td>
+						<td><b>001041032-0101</b></td>
 					</tr>
 					<tr>
 						<td>চালানপত্রইস্যু ও ঠিকানা:</td>
@@ -39,7 +39,7 @@
 			</div>
 
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-2">
 
 			<div class="text-right" id="index">
 				মূসক - ৬,৩

@@ -122,7 +122,7 @@ Route::post('update_commission', 'CommissionController@update_commission')->name
 
 Route::post('return_products', 'SalesReturnController@return_products')->name('sales_return.products');
 
-Route::get('findClientName','PartyController@findClientName');
+Route::get('findClient','PartyController@findClient');
 Route::get('findClientCode','PartyController@findClientCode');
 Route::get('findCommission','CommissionController@findCommission');
 Route::get('findGatewayCharge','PaymentReceivedController@findGatewayCharge');

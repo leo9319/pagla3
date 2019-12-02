@@ -120,9 +120,6 @@ class SaleController extends Controller
 
         $sale = new Sale;
 
-        // get the sales person name
-        $sales_person_name = DB::table('h_r_s')->where('id', $request->present_sr_id)->first()->name;
-
         $sale->date                             = $request->date;
         $sale->invoice_no                       = $invoice_id;
         $sale->client_id                        = $request->client_id; 
@@ -130,7 +127,7 @@ class SaleController extends Controller
         $sale->amount_after_vat_and_discount    = $request->total_sales_after_vat;
         $sale->amount_before_vat_after_discount = $request->total_sales_before_vat;
         $sale->vat                              = $request->party_vat;
-        $sale->present_sr_id                    = $sales_person_name;
+        $sale->present_sr_id                    = $request->current_sr_id;
         $sale->remarks                          = $request->remarks;
         $sale->save();
 
@@ -201,7 +198,7 @@ class SaleController extends Controller
     {
         $sale_date = Carbon::parse($sale->date)->format('Y-m-d H:i:s');
 
-        $max_products = 30;
+        $max_products = 19;
         $sale->amount_after_discount;
         $sale->date;
 

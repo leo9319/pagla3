@@ -31,7 +31,9 @@ class Party extends Model
 
     public function modalZone()
     {
-    	return $this->hasOne('App\Zone', 'id', 'zone');
+    	return $this->hasOne('App\Zone', 'id', 'zone')
+            ->where('audit_approval', 1)
+            ->where('management_approval', 1);
     }
 
     public function sales()
@@ -142,5 +144,23 @@ class Party extends Model
             ->sum('total_received');
 
         return $payment_received;
+    }
+
+    public function getOverallBalance()
+    {
+        $total_sales = $this->sales->sum('amount_after_discount') + $this->sales->sum('amount_after_vat_and_discount');
+        $total_returns = $this->sales_return->sum('amount_after_discount');
+        $total_payment_received_without_cheque = $this->payments_received_without_cheque->sum('paid_amount');
+        $total_payment_received_with_cheque = $this->payments_received_with_cheque->sum('paid_amount');
+        $total_adjusted_balance = $this->adjustmentedBalance->sum('amount');
+
+        $balance =  $total_returns + 
+                    $total_payment_received_without_cheque +
+                    $total_payment_received_with_cheque -
+                    $total_sales +
+                    $total_adjusted_balance;
+
+        return $balance;
+        
     }
 }

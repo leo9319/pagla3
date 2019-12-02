@@ -72,23 +72,7 @@ class ReportController extends Controller
         else if($report_name == 5) {
             // Sales
             if ($table_id == 1) {
-
-                // $detailed_sales = DB::table('sales_products AS SP')
-                //  ->select('S.date', 'C.party_name', 'PT.type AS party_type', 'P.product_name', 'P.product_code','PDT.type AS product_type', 'SP.commission_percentage', 'S.present_sr_id AS sr_name', 'Z.zone', 'S.amount_after_discount')
-                //  ->join('sales AS S', 'SP.invoice_no', 'S.invoice_no')
-                //  ->join('parties AS C', 'C.id', 'S.client_id')
-                //  ->join('party_types AS PT', 'C.party_type_id', 'PT.id' )
-                //  ->join('products AS P', 'P.id' ,  'SP.product_id')
-                //  ->join('product_types AS PDT', 'PDT.id',  'P.product_type')
-                //  ->join('zones AS Z', 'Z.id', 'C.zone')
-                //  ->where('S.date', '>=', $start_date)
-                //  ->where('S.date', '<=', $end_date)
-                //  ->where('S.audit_approval', 1)
-                //  ->where('S.management_approval', 1)
-                //  ->orderBy('SP.product_id', 'asc')
-                //  ->orderBy('C.id', 'asc')
-                //  ->get();
-
+                
                 $detailed_sales = Sale::whereBetween('date', [$start_date, $end_date])
                                       ->where('audit_approval', 1)
                                       ->where('management_approval', 1)
@@ -313,7 +297,7 @@ class ReportController extends Controller
                 // echo '->Sales';
 
                 $detailed_sales_monthly = DB::table('sales_products AS SP')
-                 ->selectRaw('C.party_name, PT.type AS party_type, P.product_code, P.product_name, P.brand, PDT.type AS product_type, SP.commission_percentage, Z.zone, SP.quantity, SP.price_per_unit, MONTH(S.date) AS month_number, YEAR(S.date) AS year, (SP.quantity * SP.price_per_unit) AS amount, S.date, S.present_sr_id')
+                 ->selectRaw('C.party_name, PT.type AS party_type, P.product_code, P.product_name, P.brand, PDT.type AS product_type, SP.commission_percentage, Z.zone, SP.quantity, SP.price_per_unit, MONTH(S.date) AS month_number, YEAR(S.date) AS year, (SP.quantity * SP.price_per_unit) AS amount, S.date, S.invoice_no, S.present_sr_id')
                  ->join('sales AS S', 'SP.invoice_no', 'S.invoice_no')
                  ->join('parties AS C', 'C.id', 'S.client_id')
                  ->join('party_types AS PT', 'C.party_type_id', 'PT.id' )
@@ -430,13 +414,13 @@ class ReportController extends Controller
     public function monthlyStatementGenerator(Request $request)
     {
         $start_date = $request->start_date;
-        $end_date = $request->end_date;
-        $party_id = $request->party_id;
+        $end_date   = $request->end_date;
+        $party_id   = $request->party_id;
 
         $client_profile = Party::find($party_id);
-        $client_name = $client_profile->party_name;
-        $client_code = $client_profile->party_id;
-        $statement_id = 'ODS_' . \Carbon\Carbon::now()->format('ymdHis');
+        $client_name    = $client_profile->party_name;
+        $client_code    = $client_profile->party_id;
+        $statement_id   = 'ODS_' . \Carbon\Carbon::now()->format('ymdHis');
 
         $sales = DB::table('sales AS S')
                     ->where('S.client_id', $party_id)
@@ -471,7 +455,13 @@ class ReportController extends Controller
                         ->where('warehouse_approval', 1)
                         ->get();
 
-        $balance =  $returns->sum('amount_after_discount') + $collections->sum('paid_amount') - $sales->sum('amount_after_discount') + $adjustments->sum('amount');
+        $balance =  $returns->sum('amount_after_discount') + 
+                    $collections->sum('paid_amount') - 
+                    $sales->sum('amount_after_discount') - 
+                    (float)$sales->sum('amount_after_vat_and_discount') + 
+                    $adjustments->sum('amount');
+
+        $overall_balance = $client_profile->getOverallBalance();
 
         return view('reports.excel.statement.showMonthlyStatement')
             ->with('sales', $sales)
@@ -482,7 +472,8 @@ class ReportController extends Controller
             ->with('client_code', $client_code)
             ->with('client_profile', $client_profile)
             ->with('statement_id', $statement_id)
-            ->with('balance', $balance);
+            ->with('balance', $balance)
+            ->with('overall_balance', $overall_balance);
     }
 
     public function monthlyStatementAllClients(Request $request)

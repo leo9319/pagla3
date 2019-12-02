@@ -8,8 +8,10 @@
 		<thead>
 			<tr>
 				<th>Date</th>
+				<th>Invoice ID</th>
 				<th>Client Name</th>
 				<th>Client Type</th>
+				<th>Product Code</th>
 				<th>Product Name</th>
 				<th>Brand</th>
 				<th>Product Type</th>
@@ -36,8 +38,10 @@
 			@foreach($detailed_sales_monthly as $detailed_sale_monthly)
 				<tr>
 					<td>{{ $detailed_sale_monthly->date }}</td>
+					<td>{{ $detailed_sale_monthly->invoice_no }}</td>
 					<td>{{ $detailed_sale_monthly->party_name }}</td>
 					<td>{{ $detailed_sale_monthly->party_type }}</td>
+					<td>{{ $detailed_sale_monthly->product_code }}</td>
 					<td>{{ $detailed_sale_monthly->product_name }}</td>
 					<td>{{ $detailed_sale_monthly->brand }}</td>
 					<td>{{ $detailed_sale_monthly->product_type }}</td>

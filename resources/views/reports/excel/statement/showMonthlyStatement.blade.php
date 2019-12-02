@@ -70,10 +70,9 @@
 
     <p class="mt-4">
       <b>
-          Your account balance is {{ number_format($balance) }} BDT.
-          @if($balance < 0)
-            Please make your payment to cover the balance.
-          @endif
+        Current Month's Balance: {{ number_format($balance) }} BDT <br>
+        Overall Balance including current Month's Balance: {{ number_format($overall_balance) }} BDT <br>
+        Overall Balance excluding current Month's Balance: {{ number_format($overall_balance - $balance) }} BDT <br>
       </b>
     </p>
     
@@ -87,12 +86,12 @@
           @foreach($sales as $sale)
           <tr>
             <td>{{ Carbon\Carbon::parse($sale->date)->format('d-M-y') }}</td>
-            <td>{{ number_format($sale->amount_after_discount) }}</td>
+            <td>{{ number_format($sale->amount_after_discount + (float)$sale->amount_after_vat_and_discount) }}</td>
           </tr>
           @endforeach
           <tr>
             <td><b>Grand Total</b></td>
-            <td><b>{{ number_format($sales->sum('amount_after_discount')) }}</b></td>
+            <td><b>{{ number_format($sales->sum('amount_after_discount') + (float)$sales->sum('amount_after_vat_and_discount')) }}</b></td>
           </tr>
         </table>
       </div>

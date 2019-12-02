@@ -102,7 +102,7 @@ class PaymentReceivedController extends Controller
         }
 
         // get the collector name:
-        $collectors_name = DB::table('h_r_s')->where('id', $request->collector)->first()->name;
+        $collectors_name = DB::table('h_r_s')->where('id', $request->collector)->first()->name ?? 'N/A';
 
         $payment_received = new PaymentReceived;
         $payment_received->date = $request->date;

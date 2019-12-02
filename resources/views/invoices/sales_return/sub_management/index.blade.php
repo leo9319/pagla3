@@ -220,7 +220,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             {!! Form::label('sales_invoice', 'Choose from the sales invoices:') !!}
-                            {!! Form::select('sales_invoice', [-1 => 'None Selected'], null, ['class'=>'form-control', 'id'=>'sales-invoices']) !!}
+                            {!! Form::select('sales_invoice', [-1 => 'None Selected'], null, ['class'=>'form-control select2', 'id'=>'sales-invoices', 'style'=>'width:710px',]) !!}
                           </div>
                         </div>
                       </div>
@@ -269,6 +269,16 @@
                     hidden:true}]
     });
 
+    $("#sales-invoices").select2({
+            placeholder: 'Select an Invoice', 
+            allowClear: true,
+            data: [{id: -1,
+                    text: '',
+                    selected: 'selected',
+                    search:'',
+                    hidden:true}]
+    });
+
     $(".readonly").keydown(function(e){
         e.preventDefault();
     });
@@ -279,10 +289,10 @@
 
     $.ajax({
       type: 'get',
-      url: '{!!URL::to('findClientName')!!}',
+      url: '{!!URL::to('findClient')!!}',
       data: {'id':client_id},
       success:function(data){
-        op_cn+='<option value="'+data[0].id+'">'+data[0].party_name+'</option>';
+        op_cn += '<option value="' + data.party_id + '">' + data.party_name + '</option>';
         document.getElementById('clientName').innerHTML = op_cn;    
         getSalesInvoices(client_id);
       },
@@ -298,10 +308,10 @@
 
     $.ajax({
       type: 'get',
-      url: '{!!URL::to('findClientCode')!!}',
+      url: '{!!URL::to('findClient')!!}',
       data: {'id':client_id},
       success:function(data){
-        op_cc+='<option value="'+data[0].id+'">'+data[0].party_id+'</option>';
+        op_cc += '<option value="' + data.party_id + '">' + data.party_code + '</option>';
         document.getElementById('clientCode').innerHTML = op_cc;   
         getSalesInvoices(client_id);
       },
@@ -322,13 +332,13 @@
         if (data.length > 0) {
           for (var i = 0; i < data.length; i++) {
             op_si+='<option value="'+data[i].id+'">'+data[i].invoice_no+'</option>';
-            document.getElementById('sales-invoices').innerHTML = op_si;  
           }
         }
         else {
-          op_si = '<option value="-1">No Invoices Found!</option>';
-          document.getElementById('sales-invoices').innerHTML = op_si;  
+          op_si = '<option value="-1">No Invoices Found!</option>'; 
         }
+
+        document.getElementById('sales-invoices').innerHTML = op_si;  
       },
       error:function(){
 
