@@ -19,6 +19,7 @@ use App\Exports\MonthlyReportExportDetailInv;
 use App\Exports\InventoryReportExport;
 use App\Exports\DueReportExport;
 use App\Exports\DailyReportExportDetailDiscount;
+use App\Exports\DisapprovedSalesExport;
 use App\Party;
 use DB;
 use App\Sale;
@@ -398,6 +399,17 @@ class ReportController extends Controller
                 // Do nothing
             }
         }
+        else if($report_name == 6) {
+            if ($table_id == 1) {
+
+                $parties = Party::where([
+                    'audit_approval'=> 1,
+                    'management_approval'=> 1,
+                ])->get();
+
+                return Excel::download(new DisapprovedSalesExport($parties, $start_date, $end_date), 'Disapproved Invoices.xlsx');
+            }
+        }
         else {
             // Do nothing
         }
@@ -450,9 +462,9 @@ class ReportController extends Controller
                                              (float)$data['sales']->sum('amount_after_vat_and_discount'));
 
 
-        $data['balanceOnLastDayLastMonth'] = $party->getOverallBalance($data['last_date_last_month']->format('Y-m-d'));
+        $data['overallBalance'] = $party->getOverallBalance($end_date);
 
-        $data['balanceIncludingThisDateRange'] = $data['balanceOnLastDayLastMonth'] + $data['balanceOfCurrentDateRange'];
+        $data['previous_balance'] = $data['overallBalance'] - $data['balanceOfCurrentDateRange'];
 
         return view('reports.excel.statement.showMonthlyStatement', $data);
     }

@@ -551,7 +551,7 @@
 
                         product_price.value = data.dlp;
 
-                    } else if (party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
+                    } else if (party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' ||party_type_name == 'Online' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
 
                         product_price.value = data.wholesale_rate;
 
@@ -609,7 +609,7 @@
 
                     if (party_type_name == 'New distributor with SR' || party_type_name == 'Distributor with SR' || party_type_name == 'Distributor without SR') {
                         product_price.value = data.dlp;
-                    } else if (party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
+                    } else if (party_type_name == 'Wholesaler inside Dhaka' || party_type_name == 'Wholesaler outside Dhaka' || party_type_name == 'Central' || party_type_name == 'Online on wholesale price' ||party_type_name == 'Online' || party_type_name == 'Supershop' || party_type_name == 'Corporate' || party_type_name == 'Shop in shop (SIS)') {
                         product_price.value = data.wholesale_rate;
                     } else {
                         product_price.value = data.mrp;

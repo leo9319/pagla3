@@ -23,7 +23,10 @@
 			<tr>
 				<td>{{ $party->party_id }}</td>
 				<td>{{ $party->party_name }}</td>
-				<td>{{ $party->sales->sum('amount_after_discount') ?? 'N/A' }}</td>
+
+				<td>
+					{{ $party->sales->sum('amount_after_discount') + $party->sales->sum('amount_after_vat_and_discount') }}</td>
+
 				<td>{{ $party->sales_return->sum('amount_after_discount') ?? 'N/A' }}</td>
 				<td>{{ $party->payments_received_without_cheque->sum('total_received') ?? 'N/A' }}</td>
 				<td>{{ $party->payments_received_with_cheque->sum('total_received') ?? 'N/A' }}</td>
@@ -31,7 +34,7 @@
 
 				<?php
 
-					$sales          = $party->sales->sum('amount_after_discount');
+					$sales          = $party->sales->sum('amount_after_discount') + $party->sales->sum('amount_after_vat_and_discount');
 					$sales_return   = $party->sales_return->sum('amount_after_discount');
 					$without_cheque = $party->payments_received_without_cheque->sum('total_received');
 					$with_cheque    = $party->payments_received_with_cheque->sum('total_received');

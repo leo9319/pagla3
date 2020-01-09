@@ -71,17 +71,21 @@
     <p class="mt-4">
       <table>
           <tr>
-              <td style="background-color: #eeeeee">Balance on {{ $last_date_last_month->format('jS F, Y') }}:</td>
-              <td><b>{{ number_format($balanceOnLastDayLastMonth) }}</b></td>
+              <td style="background-color: #eeeeee">Previous Balance:</td>
+              <td>
+                <b>
+                  {{ ($previous_balance < 0 ? "(".(number_format($previous_balance * -1)).")" : number_format($previous_balance)) }}
+                </b>
+              </td>
           </tr>
           <tr>
-              <td style="background-color: #eeeeee">Current Month's Balance</td>
-              <td><b>{{ number_format($balanceOfCurrentDateRange) }}</b></td>
+              <td style="background-color: #eeeeee">Current Month Balance</td>
+              <td><b>{{ ($balanceOfCurrentDateRange < 0 ? "(".(number_format($balanceOfCurrentDateRange * -1)).")" : number_format($balanceOfCurrentDateRange)) }}</b></td>
           </tr> 
           <tr>
-              <td style="background-color: #eeeeee">Balance including current month:</td>
-              <td><b>{{ number_format($balanceIncludingThisDateRange) }}</b></td>
-          </tr>    
+              <td style="background-color: #eeeeee">Net Due/ Balance:</td>
+              <td><b>{{ ($overallBalance < 0 ? "(".(number_format($overallBalance * -1)).")" : number_format($overallBalance)) }}</b></td>
+          </tr>
         </table>
     </p>
     

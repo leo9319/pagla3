@@ -65,7 +65,8 @@
 												'2' => 'Sales Person Report',
 												'3' => 'Collection Person Report',
 												'4' => 'Due Report',
-												'5' => 'Detailed Report'
+												'5' => 'Detailed Report',
+												'6' => 'Disapproved Invoices',
 											], null, ['class'=>'form-control']) !!}
 									</div>
 								</div>

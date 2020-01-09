@@ -45,6 +45,17 @@ class Party extends Model
     		]);
     }
 
+    public function salesDisapproved($month, $year)
+    {
+        return $this->hasMany('App\Sale', 'client_id', 'id')
+            ->where([
+                'audit_approval' => 0,
+                'management_approval' => 0,
+            ])
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year);
+    }
+
     public function sales_return()
     {
         return $this->hasMany('App\Sales_return', 'client_id', 'id')
@@ -156,7 +167,7 @@ class Party extends Model
     public function getOverallBalance($till_date = '')
     {
         if(empty($till_date)) {
-            $till_date = \Carbon\Carbon::now()->format('d m y');
+            $till_date = \Carbon\Carbon::now()->format('Y-m-d');
         }
 
         $total_sales = $this->sales
@@ -179,7 +190,7 @@ class Party extends Model
                                                     ->sum('paid_amount');
 
         $total_adjusted_balance = $this->adjustmentedBalance
-                                    ->where('date', '<=', $till_date)
+                                    ->where('created_at', '<=', $till_date)
                                     ->sum('amount');
 
         $balance =  $total_returns + 

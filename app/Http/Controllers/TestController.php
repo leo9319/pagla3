@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Test;
 use App\Product;
 use App\Sale;
+use App\Party;
 use DB;
+use DatePeriod;
+use DateInterval;
+use DateTime;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -18,7 +22,20 @@ class TestController extends Controller
      */
     public function index()
     {
-        return Sale::latest('id')->first()->id;
+        $parties = Party::limit(10)->get();
+
+        $begin = new DateTime('2018-01-01');
+        $end = new DateTime('2020-01-01');
+
+        $interval = DateInterval::createFromDateString('1 month');
+        $period = new DatePeriod($begin, $interval, $end);
+
+        foreach ($parties as $key => $party) {
+
+            foreach($period as $dt) {
+                    echo $party->salesDisapproved($dt->format("m"), $dt->format("Y"))->count();
+                }
+        }
     }
 
     /**
