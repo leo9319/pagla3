@@ -18,8 +18,8 @@
     <div id="identity">
         <div id="address">
           <div id="company-name">Purple Algorithm Ltd.</div> 
-          <div>Baridhara DOHS</div> 
-          <div>Road No. 10, House# 516 (2nd Floor)</div> 
+          <div>Baridhara, Block-J</div> 
+          <div>Road No. 4, House# 2 (1st Floor)</div> 
           <div>Dhaka-1212, Bangladesh</div>
     </div>
       <div id="logo">

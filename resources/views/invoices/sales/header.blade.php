@@ -30,7 +30,7 @@
 					</tr>
 					<tr>
 						<td>চালানপত্রইস্যু ও ঠিকানা:</td>
-						<td><b>House-516 (A1), Road-10, Baridhara DOHS, Dhaka-1213</b></td>
+						<td><b>House# 2 (1st Floor), Road No. 4, Baridhara, Block-J,Dhaka-1212</b></td>
 					</tr>
 				</table>
 
