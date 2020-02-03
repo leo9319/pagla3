@@ -14,13 +14,15 @@ class CreateProductTypes extends Migration
      */
     public function up()
     {
-        Schema::create('product_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('type');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('product_types')){
+            Schema::create('product_types', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('type');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

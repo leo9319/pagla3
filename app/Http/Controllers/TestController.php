@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Test;
+use App\Party;
 use App\Product;
 use App\Sale;
-use App\Party;
+use App\SaleProduct;
+use App\Test;
 use DB;
-use DatePeriod;
 use DateInterval;
+use DatePeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Storage;
@@ -22,20 +23,20 @@ class TestController extends Controller
      */
     public function index()
     {
-        $parties = Party::limit(10)->get();
+        // return SaleProduct::select('*')
+        //         // ->join('parties', 'sales.client_id', '=', 'parties.id')
+        //         // ->join('party_types', 'parties.party_type_id', '=', 'party_types.id')
+        //         ->leftJoin('sales', 'sales.invoice_no', '=', 'sales_products.invoice_no')
+        //         // ->whereIn('party_types.id', [1,2,3])
+        //         ->groupBy('sales.invoice_no')
+        //         // ->where('sales.audit_approval', 1)
+        //         // ->where('sales.management_approval', 1)
+        //         ->limit(100)
+        //         ->get();
 
-        $begin = new DateTime('2018-01-01');
-        $end = new DateTime('2020-01-01');
-
-        $interval = DateInterval::createFromDateString('1 month');
-        $period = new DatePeriod($begin, $interval, $end);
-
-        foreach ($parties as $key => $party) {
-
-            foreach($period as $dt) {
-                    echo $party->salesDisapproved($dt->format("m"), $dt->format("Y"))->count();
-                }
-        }
+        return Sale::with(['sale_products' => function($query){
+           $query->sum('quantity');
+        }])->limit(100)->get();
     }
 
     /**

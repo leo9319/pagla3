@@ -13,12 +13,14 @@ class CreateTestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tests', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('bank_reference');
-            $table->string('image');
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('users')){
+            Schema::create('users', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('bank_reference');
+                $table->string('image');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

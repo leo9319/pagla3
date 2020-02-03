@@ -13,17 +13,19 @@ class CreateSalesProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sales_products', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('invoice_no');
-            $table->string('product_id');
-            $table->string('price_per_unit');
-            $table->string('quantity');
-            $table->string('commission_percentage');    
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);       
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('sales_products')){
+            Schema::create('sales_products', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('invoice_no');
+                $table->string('product_id');
+                $table->string('price_per_unit');
+                $table->string('quantity');
+                $table->string('commission_percentage');    
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);       
+                $table->timestamps();
+            });
+        }
     }
 
     /**

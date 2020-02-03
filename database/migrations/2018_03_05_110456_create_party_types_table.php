@@ -13,13 +13,15 @@ class CreatePartyTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('party_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('type');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('party_types')){
+            Schema::create('party_types', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('type');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

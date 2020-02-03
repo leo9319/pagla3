@@ -13,22 +13,24 @@ class CreatePartiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('parties', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('party_id');
-            $table->string('party_name');
-            $table->string('party_type_id');
-            $table->string('party_phone');
-            $table->string('email')->nullable();
-            $table->text('address');
-            $table->string('zone');
-            $table->string('owner_number');
-            $table->string('contact_person');
-            $table->string('credit_limit');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('parties')){
+            Schema::create('parties', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('party_id');
+                $table->string('party_name');
+                $table->string('party_type_id');
+                $table->string('party_phone');
+                $table->string('email')->nullable();
+                $table->text('address');
+                $table->string('zone');
+                $table->string('owner_number');
+                $table->string('contact_person');
+                $table->string('credit_limit');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

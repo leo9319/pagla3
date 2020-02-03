@@ -13,26 +13,28 @@ class CreateDistributorInventoryUpdatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('distributor_inventory_updates', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('client_code');
-            $table->string('product_code');
-            $table->string('product_type');
-            $table->integer('ppu');
-            $table->string('client_name');
-            $table->string('product_name');
-            $table->string('brand');
-            $table->integer('quantity');
-            $table->integer('commission_percentage');
-            $table->decimal('ppu_after_commission', 11, 2);
-            $table->decimal('total_commission', 11, 2);
-            $table->decimal('total_before_commission', 11, 2);
-            $table->decimal('CIVAC', 11, 2);
-            $table->string('remarks')->nullable();
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('distributor_inventory_updates')){
+            Schema::create('distributor_inventory_updates', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('client_code');
+                $table->string('product_code');
+                $table->string('product_type');
+                $table->integer('ppu');
+                $table->string('client_name');
+                $table->string('product_name');
+                $table->string('brand');
+                $table->integer('quantity');
+                $table->integer('commission_percentage');
+                $table->decimal('ppu_after_commission', 11, 2);
+                $table->decimal('total_commission', 11, 2);
+                $table->decimal('total_before_commission', 11, 2);
+                $table->decimal('CIVAC', 11, 2);
+                $table->string('remarks')->nullable();
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

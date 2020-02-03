@@ -13,13 +13,15 @@ class CreatePaymentMethodsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_methods', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('method');
-            $table->decimal('gateway_charge', 2, 2);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('payment_methods')){
+            Schema::create('payment_methods', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('method');
+                $table->decimal('gateway_charge', 2, 2);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

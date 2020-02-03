@@ -55,7 +55,8 @@
 			<p>
 				ক্রেতার নাম: <b>{{ $sale->client->party_name }}</b><br>
 				ক্রেতার বিএনআই: <b>{{ $sale->client->bin }}</b><br>
-				সরবরাহের গন্তব্যস্থল: <b>{{ $sale->client->address }}</b>
+				সরবরাহের গন্তব্যস্থল: <b>{{ $sale->client->address }}</b><br>
+				ফোন: <b>{{ $sale->client->party_phone }}</b>
 			</p>
 
 		</div>

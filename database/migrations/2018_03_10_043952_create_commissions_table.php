@@ -13,15 +13,17 @@ class CreateCommissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('commissions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('party_types_id');
-            $table->integer('product_types_id');
-            $table->integer('commission_percentage');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('commissions')){
+            Schema::create('commissions', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('party_types_id');
+                $table->integer('product_types_id');
+                $table->integer('commission_percentage');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

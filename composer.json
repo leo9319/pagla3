@@ -12,6 +12,7 @@
         "h4cc/wkhtmltoimage-amd64": "0.12.x",
         "h4cc/wkhtmltopdf-amd64": "0.12.x",
         "laravel/framework": "5.5.*",
+        "laravel/passport": "~4.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
         "maatwebsite/excel": "^3.0"

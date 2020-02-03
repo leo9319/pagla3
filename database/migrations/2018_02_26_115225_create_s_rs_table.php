@@ -13,10 +13,12 @@ class CreateSRsTable extends Migration
      */
     public function up()
     {
-        Schema::create('s_rs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-        });
+        if(!Schema::hasTable('users')){
+            Schema::create('s_rs', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+            });
+        }
     }
 
     /**

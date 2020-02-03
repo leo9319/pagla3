@@ -13,13 +13,15 @@ class CreateOfferTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('offer_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('offer_name');
-            $table->string('audit_approval')->default(-1);
-            $table->string('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('offer_types')){
+            Schema::create('offer_types', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('offer_name');
+                $table->string('audit_approval')->default(-1);
+                $table->string('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

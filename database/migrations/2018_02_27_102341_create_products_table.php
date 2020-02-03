@@ -13,19 +13,21 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
-            $table->date('date');
-            $table->string('product_code');
-            $table->string('product_name');     
-            $table->string('brand');
-            $table->string('product_size');
-            $table->string('case_size');
-            $table->string('product_type');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('products')){
+            Schema::create('products', function (Blueprint $table) {
+                $table->increments('id');
+                $table->date('date');
+                $table->string('product_code');
+                $table->string('product_name');     
+                $table->string('brand');
+                $table->string('product_size');
+                $table->string('case_size');
+                $table->string('product_type');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

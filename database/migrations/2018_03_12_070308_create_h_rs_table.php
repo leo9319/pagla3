@@ -13,18 +13,20 @@ class CreateHRsTable extends Migration
      */
     public function up()
     {
-        Schema::create('h_rs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('employee_id');
-            $table->string('name');
-            $table->string('role');
-            $table->string('zone');
-            $table->string('phone');
-            $table->boolean('audit_approval')->default(-1);
-            $table->boolean('management_approval')->default(-1);
-            $table->boolean('sales_approval')->default(-1);
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('h_rs')){
+            Schema::create('h_rs', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('employee_id');
+                $table->string('name');
+                $table->string('role');
+                $table->string('zone');
+                $table->string('phone');
+                $table->boolean('audit_approval')->default(-1);
+                $table->boolean('management_approval')->default(-1);
+                $table->boolean('sales_approval')->default(-1);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

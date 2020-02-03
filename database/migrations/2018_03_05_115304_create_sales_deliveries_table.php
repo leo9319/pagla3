@@ -13,15 +13,17 @@ class CreateSalesDeliveriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sales_deliveries', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('shop_id');
-            $table->string('salesman');
-            $table->date('salesman_start');
-            $table->date('salesman_end')->nullable();
-            $table->boolean('discontinued')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::hasTable('sales_deliveries')){
+            Schema::create('sales_deliveries', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('shop_id');
+                $table->string('salesman');
+                $table->date('salesman_start');
+                $table->date('salesman_end')->nullable();
+                $table->boolean('discontinued')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
