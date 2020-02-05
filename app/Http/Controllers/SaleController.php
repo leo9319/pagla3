@@ -87,6 +87,10 @@ class SaleController extends Controller
             ->with('products', $products)
             ->with('invoice_id', $invoice_id)
             ->with('user', $user);
+
+        } elseif ($user->user_type == 'audit') {
+            return view('invoices.sales.audit.index')
+            ->with('sales', $sales);
         }
 
         return view('invoices.sales.index')
