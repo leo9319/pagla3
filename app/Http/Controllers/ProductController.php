@@ -27,46 +27,27 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        $product_types = Product_type::where([
-            'audit_approval' => 1,
-            'management_approval' => 1,
-        ])->pluck('type','id');
+        $product_types = Product_type::approvedProductTypes();
 
-        // Generating the products_id
-        $last_product = DB::table('products')->orderBy('id', 'desc')->limit(1)->first();
-
-        // if the last_product exists
-        if($last_product != NULL) {
-            $product_id = 'PAL' . sprintf('%06d', ($last_product->id + 1));
-        }
-        else {
-            $product_id = 'PAL000001';
-        }
-
-        $user = Auth::user();
-
-        if($user->user_type == 'sub_management') {
-            return view('products.sub_management.input')
+        if(Auth::user()->user_type == 'sub_management') {
+            return view('products.sub_management.index')
                 ->with('products', $products)
                 ->with('product_types', $product_types)
-                ->with('product_id', $product_id)
-                ->with('user', $user);
+                ->with('user', Auth::user());
 
-        } elseif($user->user_type == 'management') {
+        } elseif(Auth::user()->user_type == 'management') {
 
-            return view('products.management.input')
+            return view('products.management.index')
                 ->with('products', $products)
                 ->with('product_types', $product_types)
-                ->with('product_id', $product_id)
-                ->with('user', $user);
+                ->with('user', Auth::user());
 
         }   
         
-        return view('products.input')
+        return view('products.index')
             ->with('products', $products)
             ->with('product_types', $product_types)
-            ->with('product_id', $product_id)
-            ->with('user', $user);
+            ->with('user', Auth::user());
     }
 
     /**
@@ -87,7 +68,25 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        Product::create($request->all());
+        $last_product = Product::orderBy('id', 'desc')->first();
+
+        if($last_product != NULL) {
+            $product_code = 'PAL' . sprintf('%06d', ($last_product->id + 1));
+        }
+        else {
+            $product_code = 'PAL000001';
+        }
+
+        Product::create([
+            'date' => $request->date,
+            'product_code' => $product_code,
+            'product_name' => $request->product_name,
+            'brand' => $request->brand,
+            'product_size' => $request->product_size,
+            'case_size' => $request->case_size,
+            'product_type' => $request->product_type,
+        ]);
+
         return redirect()->back();
     }
 

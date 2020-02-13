@@ -127,10 +127,10 @@
                         </div>
 
                         <div class="col-md-6">
-                          <div class="form-group">
+                          {{-- <div class="form-group">
                             {!! Form::label('product_code', 'Product Code:') !!}
                             {!! Form::text('product_code', $product_id, ['class'=>'form-control', 'readonly']) !!}
-                          </div>
+                          </div> --}}
 
                           <div class="form-group">
                             {!! Form::label('brand', 'Brand:') !!}
@@ -139,7 +139,7 @@
 
                           <div class="form-group">
                             {!! Form::label('product_type', 'Product Type:') !!}
-                            {!! Form::select('product_type', $product_types, null, ['class'=>'form-control']) !!}
+                            {!! Form::select('product_type', $product_types->pluck('type','id'), null, ['class'=>'form-control']) !!}
                           </div>
 
                         </div>

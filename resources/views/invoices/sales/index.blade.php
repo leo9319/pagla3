@@ -3,7 +3,8 @@
 @section('content')
 <div class="card mb-3">
     <div class="card-header">
-        <i class="fa fa-table"></i> Sales @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'hr')
+        <i class="fa fa-table"></i> Sales 
+        @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'hr')
         <!-- Do Not show anything -->
         @else
         <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">Create Sales</button>
@@ -34,19 +35,14 @@
                         <th>Sales (Before Vat)</th>
                         <th>Sales (After Vat)</th>
                         <th>Remarks</th>
-
-                        @if($user->user_type == 'audit')
-                        <th>Status</th>
-                        @endif @if($user->user_type == 'audit')
-                        <th>Management Approved</th>
-                        @endif
-
                         <th>Invoice</th>
 
-                        @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'warehouse' || $user->user_type == 'hr') @else
+                        @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'warehouse' || $user->user_type == 'hr') 
+                        @else
                         <th>Edit</th>
                         <th>Delete</th>
                         @endif
+
                     </tr>
                 </thead>
                 <tfoot>
@@ -56,24 +52,17 @@
                         <th>Invoice ID</th>
                         <th>Client Code</th>
                         <th>Client Name</th>
-                        <th>Remarks</th>
                         <th>Sales (Before Vat)</th>
                         <th>Sales (After Vat)</th>
-
-                        @if($user->user_type == 'audit')
-                        <th>Status</th>
-                        @else
-                        <!-- Do nothing -->
-                        @endif @if($user->user_type == 'audit')
-                        <th>Management Approved</th>
-                        @endif
-
+                        <th>Remarks</th>
                         <th>Invoice</th>
 
-                        @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'warehouse' || $user->user_type == 'hr') @else
+                        @if($user->user_type == 'sales' || $user->user_type == 'audit' || $user->user_type == 'warehouse' || $user->user_type == 'hr') 
+                        @else
                         <th>Edit</th>
                         <th>Delete</th>
                         @endif
+                        
                     </tr>
                 </tfoot>
                 <tbody>
@@ -151,7 +140,8 @@
                                 <div class="row">
                                     <div class="form-group col-md-6">
 
-                                        {{-- hidden fields --}} {!! Form::hidden('party_vat', null, ['id'=>'party-vat']) !!}
+                                        {{-- hidden fields --}} 
+                                        {!! Form::hidden('party_vat', null, ['id'=>'party-vat']) !!}
 
                                         <div class="form-group">
                                             {!! Form::label('date', 'Date') !!} {!! Form::date('date', Carbon\Carbon::today()->format('Y-m-d'), ['class'=>'form-control', 'readonly']) !!}
