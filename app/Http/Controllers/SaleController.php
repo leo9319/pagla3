@@ -13,6 +13,7 @@ use App\Collection;
 use App\SaleProduct;
 use App\PaymentMethod;
 use App\AdjustedBalance;
+use App\Http\Resources\Sale as SaleResource;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
@@ -59,7 +60,9 @@ class SaleController extends Controller
         ])
         ->get();
 
-        $sales = Sale::orderBy('invoice_no', 'desc')->get();
+        $sales = Sale::orderBy('invoice_no', 'desc')->limit(100)->get();
+
+        // return new SaleResource(Sale::all());
 
         $last_invoice = Sale::latest('id')->first();
 
@@ -91,6 +94,14 @@ class SaleController extends Controller
         } elseif ($user->user_type == 'audit') {
             return view('invoices.sales.audit.index')
             ->with('sales', $sales);
+
+        } elseif ($user->user_type == 'superadmin') {
+            return view('invoices.sales.index_new')
+                ->with('sales', $sales)
+                ->with('clients', $clients)
+                ->with('products', $products)
+                ->with('invoice_id', $invoice_id)
+                ->with('user', $user);
         }
 
         return view('invoices.sales.index')
@@ -773,5 +784,12 @@ class SaleController extends Controller
         }
 
         return $invoice_no;
+    }
+
+    public function getSales()
+    {
+        $sales = Sale::all();
+
+        return response()->json($sales);
     }
 }

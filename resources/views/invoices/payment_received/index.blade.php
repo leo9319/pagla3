@@ -317,6 +317,10 @@
     <!-- <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div> -->
   </div>
 
+@endsection
+
+@section('footer_scripts')
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
 <script type="text/javascript">
@@ -416,4 +420,5 @@
         });
     }
 </script>
+
 @endsection
